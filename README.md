@@ -82,3 +82,33 @@ python -m src.main
 ```
 
 The server will start and display all registered tools.
+
+## Claude Desktop
+Clone this repository
+```bash
+git clone https://github.com/idoyudha/mcp-keycloak.git
+```
+
+Configure MCP clients using `uv`. Add the following JSON to your `claude_desktop_config.json`.
+
+```json
+{
+  "mcpServers": {
+    "keycloak": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "C:\\ABSOLUTE\\PATH\\TO\\PARENT\\FOLDER\\mcp-keycloak",
+        "run",
+        "src/main.py"
+      ],
+      "env": {
+        "SERVER_URL": "<YOUR_KEYCLOAK_URL>",
+        "USERNAME": "<YOUR_KEYCLOAK_USERNAME>",
+        "PASSWORD": "<YOUR_KEYCLOAK_PASSWORD>",
+        "REALM_NAME": "<YOUR_KEYCLOAK_REALM>"
+      }
+    }
+  }
+}
+```
