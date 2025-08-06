@@ -26,6 +26,7 @@ CLIENT_SECRET=optional-client-secret
 - `reset_user_password` - Reset user password
 - `get_user_sessions` - Get active sessions for a user
 - `logout_user` - Logout user from all sessions
+- `count_users` - Count all users
 
 ### Client Management
 - `list_clients` - List clients in the realm
@@ -46,6 +47,7 @@ CLIENT_SECRET=optional-client-secret
 - `get_realm_default_groups` - Get default groups
 - `add_realm_default_group` - Add default group
 - `remove_realm_default_group` - Remove default group
+- `remove_all_user_sessions` - Remove all sessions for a user
 
 ### Role Management
 - `list_realm_roles` - List realm roles

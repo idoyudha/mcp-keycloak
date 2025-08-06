@@ -14,9 +14,6 @@ def get_realm_info() -> Dict[str, Any]:
     Returns:
         Realm configuration object
     """
-    # For realm info, we don't include the realm in the path
-    url = f"{client.server_url}/admin/realms/{client.realm_name}"
-    
     response = client._make_request("GET", "", params=None)
     return response
 
@@ -227,3 +224,18 @@ def remove_realm_default_group(group_id: str) -> Dict[str, str]:
     """
     client._make_request("DELETE", f"/default-groups/{group_id}")
     return {"status": "removed", "message": f"Group {group_id} removed from default groups"}
+
+
+@mcp.tool()
+def remove_all_user_sessions() -> Dict[str, str]:
+    """
+    Remove all sessions for a user.
+    
+    Args:
+        user_id: User ID to remove sessions for
+        
+    Returns:
+        Status message
+    """
+    client._make_request("POST", "/logout-all")
+    return {"status": "removed", "message": "Sessions for all users removed successfully"}

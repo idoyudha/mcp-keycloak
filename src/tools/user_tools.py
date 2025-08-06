@@ -233,3 +233,14 @@ def logout_user(user_id: str) -> Dict[str, str]:
     """
     client._make_request("POST", f"/users/{user_id}/logout")
     return {"status": "success", "message": f"User {user_id} logged out from all sessions"}
+
+
+@mcp.tool()
+def count_users() -> int:
+    """
+    Count all users.
+    
+    Returns:
+        Number of users
+    """
+    return client._make_request("GET", "/users/count")
