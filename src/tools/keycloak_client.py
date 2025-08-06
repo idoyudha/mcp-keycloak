@@ -1,6 +1,6 @@
 import requests
 from typing import Dict, Any, Optional
-from common.config import KEYCLOAK_CFG
+from ..common.config import KEYCLOAK_CFG
 
 
 class KeycloakClient:

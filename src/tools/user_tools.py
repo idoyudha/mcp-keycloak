@@ -1,6 +1,6 @@
 from typing import Dict, Any, Optional, List
-from common.server import mcp
-from tools.keycloak_client import KeycloakClient
+from ..common.server import mcp
+from .keycloak_client import KeycloakClient
 
 
 client = KeycloakClient()

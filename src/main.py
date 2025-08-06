@@ -1,12 +1,13 @@
 import sys
-from common.server import mcp
+from .common.server import mcp
 
 # Import all tool modules to register them with the MCP server
-import tools.user_tools
-import tools.client_tools
-import tools.realm_tools
-import tools.role_tools
-import tools.group_tools
+from . import tools
+from .tools import user_tools
+from .tools import client_tools
+from .tools import realm_tools
+from .tools import role_tools
+from .tools import group_tools
 
 class KeycloakMCPServer:
     def __init__(self):
