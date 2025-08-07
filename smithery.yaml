@@ -20,7 +20,7 @@ startCommand:
   commandFunction: |-
     (config) => ({
       command: 'uv',
-      args: ['run', 'python', '-m', 'src.main'],
+      args: ['run', 'python', '-m', 'src'],
       env: {
         SERVER_URL: config.keycloakUrl,
         REALM_NAME: config.keycloakRealm,
