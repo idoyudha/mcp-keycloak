@@ -106,7 +106,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
-          --entrypoint '/opt/keycloak/bin/kc.sh start-dev'
+          --entrypoint /opt/keycloak/bin/kc.sh start-dev
 
     steps:
     - name: ⚙️ Harden Runner
