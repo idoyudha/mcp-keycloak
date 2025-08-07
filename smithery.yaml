@@ -1,33 +1,42 @@
-runtime: "container"
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
 startCommand:
-  type: "stdio"
+  type: stdio
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({ command: 'mcp-keycloak', args: [], env: { SERVER_URL: config.serverUrl, USERNAME: config.username, PASSWORD: config.password, REALM_NAME: config.realmName, ...(config.clientId ? { CLIENT_ID: config.clientId } : {}), ...(config.clientSecret ? { CLIENT_SECRET: config.clientSecret } : {}) } })
   configSchema:
-    type: "object"
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - serverUrl
+      - username
+      - password
+      - realmName
     properties:
-      keycloakUrl:
-        type: "string"
-        description: "Keycloak server URL"
-      keycloakRealm:
-        type: "string"
-        description: "Keycloak realm"
-      keycloakClientId:
-        type: "string"
-        description: "Keycloak client ID"
-      keycloakClientSecret:
-        type: "string"
-        description: "Keycloak client secret"
-    required: ["keycloakUrl", "keycloakRealm", "keycloakClientId", "keycloakClientSecret"]
-  commandFunction: |-
-    (config) => ({
-      command: 'uv',
-      args: ['run', 'python', '-m', 'src'],
-      env: {
-        SERVER_URL: config.keycloakUrl,
-        REALM_NAME: config.keycloakRealm,
-        CLIENT_ID: config.keycloakClientId,
-        CLIENT_SECRET: config.keycloakClientSecret
-      }
-    })
-build:
-  dockerfile: "Dockerfile"
-  dockerBuildPath: "."
+      serverUrl:
+        type: string
+        description: URL of the Keycloak server
+      username:
+        type: string
+        description: Admin username for Keycloak
+      password:
+        type: string
+        description: Admin password for Keycloak
+      realmName:
+        type: string
+        description: Keycloak realm name
+      clientId:
+        type: string
+        description: Optional OAuth2 client ID
+      clientSecret:
+        type: string
+        description: Optional OAuth2 client secret
+  exampleConfig:
+    serverUrl: https://your-keycloak.com
+    username: admin
+    password: secret
+    realmName: myrealm
+    clientId: myclient
+    clientSecret: mysecret
