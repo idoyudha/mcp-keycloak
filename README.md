@@ -1,96 +1,119 @@
 # Keycloak MCP Server
 
-This MCP (Model Context Protocol) server provides tools for interacting with Keycloak REST API.
+A Model Context Protocol (MCP) server that provides a natural language interface for managing Keycloak identity and access management through its REST API. This server enables AI agents to perform user management, client configuration, realm administration, and role-based access control operations seamlessly.
+
+## Overview
+
+The Keycloak MCP Server bridges the gap between AI applications and Keycloak's powerful identity management capabilities. Whether you're building an AI assistant that needs to manage users, configure clients, or handle complex authorization scenarios, this server provides the tools you need through simple, natural language commands.
+
+## Features
+
+### 🔐 Comprehensive User Management
+Manage users lifecycle from creation to deletion, including password resets, session management, and user attribute updates.
+
+### 🏢 Client Configuration
+Create and configure OAuth2/OIDC clients, manage client secrets, and handle service accounts programmatically.
+
+### 👥 Role-Based Access Control
+Define and assign realm and client-specific roles, manage user permissions, and implement fine-grained access control.
+
+### 🏛️ Realm Administration
+Configure realm settings, manage default groups, handle event configurations, and control realm-wide policies.
+
+### 🔄 Group Management
+Organize users into groups, manage group hierarchies, and handle group-based permissions efficiently.
+
+## Installation
+
+### Quick Start
+
+Install using pip:
+```bash
+pip install mcp-keycloak
+```
+
+### Development Installation
+
+Clone the repository and install dependencies:
+```bash
+git clone https://github.com/idoyudha/mcp-keycloak.git
+cd mcp-keycloak
+pip install -e .
+```
 
 ## Configuration
 
-Create a `.env` file in the root directory with the following variables:
+The server can be configured using environment variables or a `.env` file:
 
-```
+```bash
+# Required configuration
 SERVER_URL=https://your-keycloak-server.com
 USERNAME=admin-username
 PASSWORD=admin-password
 REALM_NAME=your-realm
+
+# Optional OAuth2 client configuration
 CLIENT_ID=optional-client-id
 CLIENT_SECRET=optional-client-secret
 ```
 
-## Available Tools
+## Tools
+
+The Keycloak MCP Server provides a comprehensive set of tools organized by functionality:
 
 ### User Management
+Complete user lifecycle management including:
 - `list_users` - List users with pagination and filtering
-- `get_user` - Get a specific user by ID
-- `create_user` - Create a new user
-- `update_user` - Update user information
-- `delete_user` - Delete a user
-- `reset_user_password` - Reset user password
-- `get_user_sessions` - Get active sessions for a user
-- `logout_user` - Logout user from all sessions
-- `count_users` - Count all users
+- `create_user` / `update_user` / `delete_user` - Full CRUD operations
+- `reset_user_password` - Password management
+- `get_user_sessions` / `logout_user` - Session control
+- `count_users` - User statistics
 
 ### Client Management
-- `list_clients` - List clients in the realm
-- `get_client` - Get client by database ID
-- `get_client_by_clientid` - Get client by client ID
-- `create_client` - Create a new client
-- `update_client` - Update client configuration
-- `delete_client` - Delete a client
-- `get_client_secret` - Get client secret
-- `regenerate_client_secret` - Regenerate client secret
-- `get_client_service_account` - Get service account for client
-
-### Realm Management
-- `get_realm_info` - Get current realm information
-- `update_realm_settings` - Update realm settings
-- `get_realm_events_config` - Get events configuration
-- `update_realm_events_config` - Update events configuration
-- `get_realm_default_groups` - Get default groups
-- `add_realm_default_group` - Add default group
-- `remove_realm_default_group` - Remove default group
-- `remove_all_user_sessions` - Remove all sessions for a user
+OAuth2/OIDC client configuration:
+- `list_clients` / `get_client` / `create_client` - Client operations
+- `get_client_secret` / `regenerate_client_secret` - Secret management
+- `get_client_service_account` - Service account access
+- `update_client` / `delete_client` - Client modifications
 
 ### Role Management
-- `list_realm_roles` - List realm roles
-- `get_realm_role` - Get specific realm role
-- `create_realm_role` - Create realm role
-- `update_realm_role` - Update realm role
-- `delete_realm_role` - Delete realm role
-- `list_client_roles` - List client roles
-- `create_client_role` - Create client role
-- `assign_realm_role_to_user` - Assign realm roles to user
-- `remove_realm_role_from_user` - Remove realm roles from user
-- `get_user_realm_roles` - Get user's realm roles
-- `assign_client_role_to_user` - Assign client roles to user
+Fine-grained permission control:
+- `list_realm_roles` / `create_realm_role` - Realm role operations
+- `list_client_roles` / `create_client_role` - Client-specific roles
+- `assign_realm_role_to_user` / `remove_realm_role_from_user` - Role assignments
+- `get_user_realm_roles` / `assign_client_role_to_user` - User role queries
 
 ### Group Management
-- `list_groups` - List all groups
-- `get_group` - Get specific group
-- `create_group` - Create new group
-- `update_group` - Update group
-- `delete_group` - Delete group
-- `get_group_members` - Get group members
-- `add_user_to_group` - Add user to group
-- `remove_user_from_group` - Remove user from group
-- `get_user_groups` - Get user's groups
+Hierarchical user organization:
+- `list_groups` / `create_group` / `update_group` - Group operations
+- `get_group_members` / `add_user_to_group` - Membership management
+- `get_user_groups` / `remove_user_from_group` - User group associations
+
+### Realm Administration
+System-wide configuration:
+- `get_realm_info` / `update_realm_settings` - Realm configuration
+- `get_realm_events_config` / `update_realm_events_config` - Event management
+- `add_realm_default_group` / `remove_realm_default_group` - Default settings
 
 ## Usage
 
-Run the MCP server:
+### Running the Server
 
+Start the MCP server directly:
 ```bash
 python -m src.main
 ```
 
-The server will start and display all registered tools.
+### Integration Examples
 
-## Claude Desktop
-Clone this repository
+#### Claude Desktop
+
+1. Clone the server:
 ```bash
 git clone https://github.com/idoyudha/mcp-keycloak.git
 ```
 
-Configure MCP clients using `uv`. Add the following JSON to your `claude_desktop_config.json`.
-
+2. Configure in `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
@@ -98,17 +121,70 @@ Configure MCP clients using `uv`. Add the following JSON to your `claude_desktop
       "command": "uv",
       "args": [
         "--directory",
-        "C:\\ABSOLUTE\\PATH\\TO\\PARENT\\FOLDER\\mcp-keycloak",
+        "/path/to/mcp-keycloak",
         "run",
         "src/main.py"
       ],
       "env": {
-        "SERVER_URL": "<YOUR_KEYCLOAK_URL>",
-        "USERNAME": "<YOUR_KEYCLOAK_USERNAME>",
-        "PASSWORD": "<YOUR_KEYCLOAK_PASSWORD>",
-        "REALM_NAME": "<YOUR_KEYCLOAK_REALM>"
+        "SERVER_URL": "https://your-keycloak.com",
+        "USERNAME": "admin",
+        "PASSWORD": "admin-password",
+        "REALM_NAME": "your-realm"
       }
     }
   }
 }
 ```
+
+#### Using uvx
+
+```json
+{
+  "mcpServers": {
+    "keycloak": {
+      "command": "uvx",
+      "args": [
+        "mcp-keycloak"
+      ],
+      "env": {
+        "SERVER_URL": "https://your-keycloak.com",
+        "USERNAME": "admin",
+        "PASSWORD": "admin-password",
+        "REALM_NAME": "your-realm"
+      }
+    }
+  }
+}
+```
+
+## Example Use Cases
+
+### 🤖 AI-Powered Identity Management
+Build AI assistants that can handle user onboarding, permission management, and access control through natural language commands.
+
+### 🔄 Automated User Provisioning
+Create workflows that automatically provision users, assign roles, and configure client applications based on business rules.
+
+### 📊 Identity Analytics
+Query and analyze user data, session information, and access patterns to gain insights into your identity infrastructure.
+
+### 🚀 DevOps Integration
+Integrate Keycloak management into your CI/CD pipelines, allowing automated configuration of identity services.
+
+## Requirements
+
+- Python 3.8 or higher
+- Keycloak server (tested with Keycloak 18+)
+- Admin access to Keycloak realm
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Support
+
+For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/idoyudha/mcp-keycloak).
