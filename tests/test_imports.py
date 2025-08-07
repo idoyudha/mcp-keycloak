@@ -1,7 +1,5 @@
 """Basic import tests that don't require Keycloak connection"""
 
-import pytest
-
 
 def test_can_import_main():
     """Test that we can import the main module"""
