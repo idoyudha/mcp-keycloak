@@ -104,7 +104,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
-          quay.io/keycloak/keycloak:latest start-dev
+          --entrypoint=""
+          quay.io/keycloak/keycloak:latest
+          /opt/keycloak/bin/kc.sh start-dev
 
     steps:
     - name: ⚙️ Harden Runner
