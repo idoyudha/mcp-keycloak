@@ -2,6 +2,7 @@
 [![Integration](https://github.com/redis/mcp-redis/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redis/lettuce/actions/workflows/integration.yml)
 [![Python Version](https://img.shields.io/badge/python-3.13%2B-blue)](https://www.python.org/downloads/)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.txt)
+[![smithery badge](https://smithery.ai/badge/mcp-keycloak)](https://smithery.ai/server/mcp-keycloak)
 
 A Model Context Protocol (MCP) server that provides a natural language interface for managing Keycloak identity and access management through its REST API. This server enables AI agents to perform user management, client configuration, realm administration, and role-based access control operations seamlessly.
 
@@ -27,6 +28,14 @@ Configure realm settings, manage default groups, handle event configurations, an
 Organize users into groups, manage group hierarchies, and handle group-based permissions efficiently.
 
 ## Installation
+
+### Installing via Smithery
+
+To install mcp-keycloak for Claude Desktop automatically via [Smithery](https://smithery.ai/server/mcp-keycloak):
+
+```bash
+npx -y @smithery/cli install mcp-keycloak --client claude
+```
 
 ### Quick Start
 
