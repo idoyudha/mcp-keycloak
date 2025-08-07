@@ -17,6 +17,17 @@ startCommand:
         type: "string"
         description: "Keycloak client secret"
     required: ["keycloakUrl", "keycloakRealm", "keycloakClientId", "keycloakClientSecret"]
+  commandFunction: |-
+    (config) => ({
+      command: 'uv',
+      args: ['run', 'python', '-m', 'src.main'],
+      env: {
+        SERVER_URL: config.keycloakUrl,
+        REALM_NAME: config.keycloakRealm,
+        CLIENT_ID: config.keycloakClientId,
+        CLIENT_SECRET: config.keycloakClientSecret
+      }
+    })
 build:
   dockerfile: "Dockerfile"
   dockerBuildPath: "."
