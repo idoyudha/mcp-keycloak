@@ -26,7 +26,7 @@ class KeycloakClient:
             "client_id": "admin-cli",  # Using admin-cli for admin operations
         }
 
-        response = requests.post(token_url, data=data)
+        response = requests.post(token_url, data=data, timeout=30)
         response.raise_for_status()
 
         token_data = response.json()
