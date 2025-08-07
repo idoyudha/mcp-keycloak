@@ -99,14 +99,12 @@ jobs:
         env:
           KEYCLOAK_ADMIN: admin
           KEYCLOAK_ADMIN_PASSWORD: admin
-          KC_BOOTSTRAP_ADMIN_USERNAME: admin
-          KC_BOOTSTRAP_ADMIN_PASSWORD: admin
         options: >-
           --health-cmd "curl -f http://localhost:8080/health/ready || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
-        cmd: start-dev
+          quay.io/keycloak/keycloak:latest start-dev
 
     steps:
     - name: ⚙️ Harden Runner
