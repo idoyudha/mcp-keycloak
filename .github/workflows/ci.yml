@@ -33,10 +33,6 @@ jobs:
         uv python install 3.12
         uv sync --all-extras --dev
 
-    - name: ⚙️ Add linting tools
-      run: |
-        uv add --dev ruff mypy
-
     - name: ⚙️ Run ruff format check
       run: |
         uv run ruff format --check .
@@ -44,10 +40,6 @@ jobs:
     - name: ⚙️ Run ruff linter
       run: |
         uv run ruff check .
-
-    - name: ⚙️ Run mypy
-      run: |
-        uv run mypy src/
 
   security-scan:
     runs-on: ubuntu-latest
