@@ -9,5 +9,5 @@ KEYCLOAK_CFG = {
     "password": os.getenv("PASSWORD"),
     "realm_name": os.getenv("REALM_NAME"),
     "client_id": os.getenv("CLIENT_ID"),
-    "client_secret": os.getenv("CLIENT_SECRET")
+    "client_secret": os.getenv("CLIENT_SECRET"),
 }

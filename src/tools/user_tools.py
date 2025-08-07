@@ -13,11 +13,11 @@ def list_users(
     search: Optional[str] = None,
     username: Optional[str] = None,
     email: Optional[str] = None,
-    enabled: Optional[bool] = None
+    enabled: Optional[bool] = None,
 ) -> List[Dict[str, Any]]:
     """
     List users in the realm.
-    
+
     Args:
         first: Pagination offset
         max: Maximum results size (defaults to 100)
@@ -25,7 +25,7 @@ def list_users(
         username: Username filter
         email: Email filter
         enabled: Filter by enabled/disabled users
-    
+
     Returns:
         List of user objects
     """
@@ -42,7 +42,7 @@ def list_users(
         params["email"] = email
     if enabled is not None:
         params["enabled"] = str(enabled).lower()
-    
+
     return client._make_request("GET", "/users", params=params)
 
 
@@ -50,10 +50,10 @@ def list_users(
 def get_user(user_id: str) -> Dict[str, Any]:
     """
     Get a specific user by ID.
-    
+
     Args:
         user_id: The user's ID
-        
+
     Returns:
         User object
     """
@@ -69,11 +69,11 @@ def create_user(
     enabled: bool = True,
     email_verified: bool = False,
     temporary_password: Optional[str] = None,
-    attributes: Optional[Dict[str, List[str]]] = None
+    attributes: Optional[Dict[str, List[str]]] = None,
 ) -> Dict[str, str]:
     """
     Create a new user.
-    
+
     Args:
         username: Username for the new user
         email: Email address
@@ -83,16 +83,16 @@ def create_user(
         email_verified: Whether the email is verified
         temporary_password: Initial password (user will be required to change it)
         attributes: Additional user attributes
-        
+
     Returns:
         Dict with status and location of created user
     """
     user_data = {
         "username": username,
         "enabled": enabled,
-        "emailVerified": email_verified
+        "emailVerified": email_verified,
     }
-    
+
     if email:
         user_data["email"] = email
     if first_name:
@@ -101,14 +101,12 @@ def create_user(
         user_data["lastName"] = last_name
     if attributes:
         user_data["attributes"] = attributes
-    
+
     if temporary_password:
-        user_data["credentials"] = [{
-            "type": "password",
-            "value": temporary_password,
-            "temporary": True
-        }]
-    
+        user_data["credentials"] = [
+            {"type": "password", "value": temporary_password, "temporary": True}
+        ]
+
     # Create user returns no content, but includes Location header
     client._make_request("POST", "/users", data=user_data)
     return {"status": "created", "message": f"User {username} created successfully"}
@@ -123,11 +121,11 @@ def update_user(
     last_name: Optional[str] = None,
     enabled: Optional[bool] = None,
     email_verified: Optional[bool] = None,
-    attributes: Optional[Dict[str, List[str]]] = None
+    attributes: Optional[Dict[str, List[str]]] = None,
 ) -> Dict[str, str]:
     """
     Update an existing user.
-    
+
     Args:
         user_id: The user's ID
         username: New username
@@ -137,13 +135,13 @@ def update_user(
         enabled: Whether the user is enabled
         email_verified: Whether the email is verified
         attributes: Updated user attributes
-        
+
     Returns:
         Status message
     """
     # First get the current user data
     current_user = client._make_request("GET", f"/users/{user_id}")
-    
+
     # Update only provided fields
     if username is not None:
         current_user["username"] = username
@@ -159,7 +157,7 @@ def update_user(
         current_user["emailVerified"] = email_verified
     if attributes is not None:
         current_user["attributes"] = attributes
-    
+
     client._make_request("PUT", f"/users/{user_id}", data=current_user)
     return {"status": "updated", "message": f"User {user_id} updated successfully"}
 
@@ -168,10 +166,10 @@ def update_user(
 def delete_user(user_id: str) -> Dict[str, str]:
     """
     Delete a user.
-    
+
     Args:
         user_id: The user's ID
-        
+
     Returns:
         Status message
     """
@@ -181,28 +179,24 @@ def delete_user(user_id: str) -> Dict[str, str]:
 
 @mcp.tool()
 def reset_user_password(
-    user_id: str,
-    password: str,
-    temporary: bool = True
+    user_id: str, password: str, temporary: bool = True
 ) -> Dict[str, str]:
     """
     Reset a user's password.
-    
+
     Args:
         user_id: The user's ID
         password: New password
         temporary: Whether the password is temporary (user must change on next login)
-        
+
     Returns:
         Status message
     """
-    credential_data = {
-        "type": "password",
-        "value": password,
-        "temporary": temporary
-    }
-    
-    client._make_request("PUT", f"/users/{user_id}/reset-password", data=credential_data)
+    credential_data = {"type": "password", "value": password, "temporary": temporary}
+
+    client._make_request(
+        "PUT", f"/users/{user_id}/reset-password", data=credential_data
+    )
     return {"status": "success", "message": f"Password reset for user {user_id}"}
 
 
@@ -210,10 +204,10 @@ def reset_user_password(
 def get_user_sessions(user_id: str) -> List[Dict[str, Any]]:
     """
     Get active sessions for a user.
-    
+
     Args:
         user_id: The user's ID
-        
+
     Returns:
         List of active sessions
     """
@@ -224,22 +218,25 @@ def get_user_sessions(user_id: str) -> List[Dict[str, Any]]:
 def logout_user(user_id: str) -> Dict[str, str]:
     """
     Logout all sessions for a user.
-    
+
     Args:
         user_id: The user's ID
-        
+
     Returns:
         Status message
     """
     client._make_request("POST", f"/users/{user_id}/logout")
-    return {"status": "success", "message": f"User {user_id} logged out from all sessions"}
+    return {
+        "status": "success",
+        "message": f"User {user_id} logged out from all sessions",
+    }
 
 
 @mcp.tool()
 def count_users() -> int:
     """
     Count all users.
-    
+
     Returns:
         Number of users
     """

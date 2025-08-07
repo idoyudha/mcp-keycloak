@@ -11,17 +11,17 @@ def list_clients(
     client_id: Optional[str] = None,
     viewable_only: bool = False,
     first: Optional[int] = None,
-    max: Optional[int] = None
+    max: Optional[int] = None,
 ) -> List[Dict[str, Any]]:
     """
     List clients in the realm.
-    
+
     Args:
         client_id: Filter by client ID (partial match)
         viewable_only: Only return viewable clients
         first: Pagination offset
         max: Maximum results size
-        
+
     Returns:
         List of client objects
     """
@@ -34,7 +34,7 @@ def list_clients(
         params["first"] = first
     if max is not None:
         params["max"] = max
-        
+
     return client._make_request("GET", "/clients", params=params)
 
 
@@ -42,10 +42,10 @@ def list_clients(
 def get_client(id: str) -> Dict[str, Any]:
     """
     Get a specific client by database ID.
-    
+
     Args:
         id: The client's database ID (not client_id)
-        
+
     Returns:
         Client object
     """
@@ -56,10 +56,10 @@ def get_client(id: str) -> Dict[str, Any]:
 def get_client_by_clientid(client_id: str) -> Dict[str, Any]:
     """
     Get a specific client by client ID.
-    
+
     Args:
         client_id: The client's client_id
-        
+
     Returns:
         Client object
     """
@@ -89,11 +89,11 @@ def create_client(
     authorization_services_enabled: bool = False,
     direct_access_grants_enabled: bool = False,
     implicit_flow_enabled: bool = False,
-    standard_flow_enabled: bool = True
+    standard_flow_enabled: bool = True,
 ) -> Dict[str, str]:
     """
     Create a new client.
-    
+
     Args:
         client_id: Client ID (unique identifier)
         name: Display name
@@ -111,7 +111,7 @@ def create_client(
         direct_access_grants_enabled: Enable direct access grants (password flow)
         implicit_flow_enabled: Enable implicit flow
         standard_flow_enabled: Enable standard flow (authorization code)
-        
+
     Returns:
         Status message
     """
@@ -126,9 +126,9 @@ def create_client(
         "authorizationServicesEnabled": authorization_services_enabled,
         "directAccessGrantsEnabled": direct_access_grants_enabled,
         "implicitFlowEnabled": implicit_flow_enabled,
-        "standardFlowEnabled": standard_flow_enabled
+        "standardFlowEnabled": standard_flow_enabled,
     }
-    
+
     if name:
         client_data["name"] = name
     if description:
@@ -139,7 +139,7 @@ def create_client(
         client_data["redirectUris"] = redirect_uris
     if web_origins:
         client_data["webOrigins"] = web_origins
-    
+
     client._make_request("POST", "/clients", data=client_data)
     return {"status": "created", "message": f"Client {client_id} created successfully"}
 
@@ -155,11 +155,11 @@ def update_client(
     web_origins: Optional[List[str]] = None,
     public_client: Optional[bool] = None,
     service_accounts_enabled: Optional[bool] = None,
-    direct_access_grants_enabled: Optional[bool] = None
+    direct_access_grants_enabled: Optional[bool] = None,
 ) -> Dict[str, str]:
     """
     Update an existing client.
-    
+
     Args:
         id: The client's database ID
         client_id: New client ID
@@ -171,13 +171,13 @@ def update_client(
         public_client: Whether client is public
         service_accounts_enabled: Enable service accounts
         direct_access_grants_enabled: Enable direct access grants
-        
+
     Returns:
         Status message
     """
     # Get current client data
     current_client = client._make_request("GET", f"/clients/{id}")
-    
+
     # Update only provided fields
     if client_id is not None:
         current_client["clientId"] = client_id
@@ -197,7 +197,7 @@ def update_client(
         current_client["serviceAccountsEnabled"] = service_accounts_enabled
     if direct_access_grants_enabled is not None:
         current_client["directAccessGrantsEnabled"] = direct_access_grants_enabled
-    
+
     client._make_request("PUT", f"/clients/{id}", data=current_client)
     return {"status": "updated", "message": f"Client {id} updated successfully"}
 
@@ -206,10 +206,10 @@ def update_client(
 def delete_client(id: str) -> Dict[str, str]:
     """
     Delete a client.
-    
+
     Args:
         id: The client's database ID
-        
+
     Returns:
         Status message
     """
@@ -221,10 +221,10 @@ def delete_client(id: str) -> Dict[str, str]:
 def get_client_secret(id: str) -> Dict[str, str]:
     """
     Get the client secret.
-    
+
     Args:
         id: The client's database ID
-        
+
     Returns:
         Client secret object
     """
@@ -235,10 +235,10 @@ def get_client_secret(id: str) -> Dict[str, str]:
 def regenerate_client_secret(id: str) -> Dict[str, str]:
     """
     Regenerate the client secret.
-    
+
     Args:
         id: The client's database ID
-        
+
     Returns:
         New client secret object
     """
@@ -249,10 +249,10 @@ def regenerate_client_secret(id: str) -> Dict[str, str]:
 def get_client_service_account(id: str) -> Dict[str, Any]:
     """
     Get service account user for a client.
-    
+
     Args:
         id: The client's database ID
-        
+
     Returns:
         Service account user object
     """

@@ -11,5 +11,5 @@ __all__ = [
     "client_tools",
     "realm_tools",
     "role_tools",
-    "group_tools"
+    "group_tools",
 ]

@@ -10,7 +10,7 @@ client = KeycloakClient()
 def get_realm_info() -> Dict[str, Any]:
     """
     Get information about the current realm.
-    
+
     Returns:
         Realm configuration object
     """
@@ -43,11 +43,11 @@ def update_realm_settings(
     quick_login_check_milli_seconds: Optional[int] = None,
     max_delta_time_seconds: Optional[int] = None,
     failure_factor: Optional[int] = None,
-    default_locale: Optional[str] = None
+    default_locale: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Update realm settings.
-    
+
     Args:
         display_name: Display name for the realm
         display_name_html: HTML display name
@@ -73,13 +73,13 @@ def update_realm_settings(
         max_delta_time_seconds: Max time between failures
         failure_factor: Failure factor
         default_locale: Default locale
-        
+
     Returns:
         Status message
     """
     # Get current realm data
     current_realm = client._make_request("GET", "")
-    
+
     # Update only provided fields
     if display_name is not None:
         current_realm["displayName"] = display_name
@@ -129,16 +129,19 @@ def update_realm_settings(
         current_realm["failureFactor"] = failure_factor
     if default_locale is not None:
         current_realm["defaultLocale"] = default_locale
-    
+
     client._make_request("PUT", "", data=current_realm)
-    return {"status": "updated", "message": f"Realm {client.realm_name} settings updated successfully"}
+    return {
+        "status": "updated",
+        "message": f"Realm {client.realm_name} settings updated successfully",
+    }
 
 
 @mcp.tool()
 def get_realm_events_config() -> Dict[str, Any]:
     """
     Get realm events configuration.
-    
+
     Returns:
         Events configuration object
     """
@@ -151,24 +154,24 @@ def update_realm_events_config(
     events_listeners: Optional[List[str]] = None,
     enabled_event_types: Optional[List[str]] = None,
     admin_events_enabled: Optional[bool] = None,
-    admin_events_details_enabled: Optional[bool] = None
+    admin_events_details_enabled: Optional[bool] = None,
 ) -> Dict[str, str]:
     """
     Update realm events configuration.
-    
+
     Args:
         events_enabled: Enable events
         events_listeners: Event listener implementations
         enabled_event_types: Types of events to record
         admin_events_enabled: Enable admin events
         admin_events_details_enabled: Include details in admin events
-        
+
     Returns:
         Status message
     """
     # Get current config
     current_config = client._make_request("GET", "/events/config")
-    
+
     # Update only provided fields
     if events_enabled is not None:
         current_config["eventsEnabled"] = events_enabled
@@ -180,7 +183,7 @@ def update_realm_events_config(
         current_config["adminEventsEnabled"] = admin_events_enabled
     if admin_events_details_enabled is not None:
         current_config["adminEventsDetailsEnabled"] = admin_events_details_enabled
-    
+
     client._make_request("PUT", "/events/config", data=current_config)
     return {"status": "updated", "message": "Events configuration updated successfully"}
 
@@ -189,7 +192,7 @@ def update_realm_events_config(
 def get_realm_default_groups() -> List[Dict[str, Any]]:
     """
     Get default groups for the realm.
-    
+
     Returns:
         List of default groups
     """
@@ -200,10 +203,10 @@ def get_realm_default_groups() -> List[Dict[str, Any]]:
 def add_realm_default_group(group_id: str) -> Dict[str, str]:
     """
     Add a default group to the realm.
-    
+
     Args:
         group_id: Group ID to add as default
-        
+
     Returns:
         Status message
     """
@@ -215,27 +218,33 @@ def add_realm_default_group(group_id: str) -> Dict[str, str]:
 def remove_realm_default_group(group_id: str) -> Dict[str, str]:
     """
     Remove a default group from the realm.
-    
+
     Args:
         group_id: Group ID to remove from defaults
-        
+
     Returns:
         Status message
     """
     client._make_request("DELETE", f"/default-groups/{group_id}")
-    return {"status": "removed", "message": f"Group {group_id} removed from default groups"}
+    return {
+        "status": "removed",
+        "message": f"Group {group_id} removed from default groups",
+    }
 
 
 @mcp.tool()
 def remove_all_user_sessions() -> Dict[str, str]:
     """
     Remove all sessions for a user.
-    
+
     Args:
         user_id: User ID to remove sessions for
-        
+
     Returns:
         Status message
     """
     client._make_request("POST", "/logout-all")
-    return {"status": "removed", "message": "Sessions for all users removed successfully"}
+    return {
+        "status": "removed",
+        "message": "Sessions for all users removed successfully",
+    }
