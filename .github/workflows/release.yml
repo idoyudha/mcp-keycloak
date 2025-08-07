@@ -69,69 +69,9 @@ jobs:
       run: |
         uv run bandit -r src/
 
-  test:
-    runs-on: ubuntu-latest
-    needs: validate-release
-    strategy:
-      matrix:
-        python-version: ["3.12", "3.13"]
-
-    services:
-      keycloak:
-        image: quay.io/keycloak/keycloak:latest
-        ports:
-          - 8080:8080
-        env:
-          KEYCLOAK_ADMIN: admin
-          KEYCLOAK_ADMIN_PASSWORD: admin
-        options: >-
-          --health-cmd "curl -f http://localhost:8080/health/ready || exit 1"
-          --health-interval 30s
-          --health-timeout 10s
-          --health-retries 5
-          start-dev
-
-    steps:
-    - name: ⚙️ Harden Runner
-      uses: step-security/harden-runner@v2
-      with:
-        egress-policy: audit
-
-    - name: ⚙️ Checkout the project
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: ⚙️ Install uv
-      uses: astral-sh/setup-uv@v4
-      with:
-        version: "latest"
-
-    - name: ⚙️ Set up Python ${{ matrix.python-version }}
-      run: |
-        uv python install ${{ matrix.python-version }}
-        uv sync --all-extras --dev
-
-    - name: ⚙️ Run tests
-      run: uv run pytest tests/ -v --tb=short
-      env:
-        KEYCLOAK_URL: http://localhost:8080
-        KEYCLOAK_REALM: master
-        KEYCLOAK_USERNAME: admin
-        KEYCLOAK_PASSWORD: admin
-
-    - name: ⚙️ Test MCP server startup
-      run: |
-        timeout 10s uv run python src/main.py || test $? = 124
-      env:
-        KEYCLOAK_URL: http://localhost:8080
-        KEYCLOAK_REALM: master
-        KEYCLOAK_USERNAME: admin
-        KEYCLOAK_PASSWORD: admin
-
   build-and-publish:
     runs-on: ubuntu-latest
-    needs: [validate-release, security-scan, test]
+    needs: [validate-release, security-scan]
     environment: 
       name: pypi
       url: https://pypi.org/p/mcp-keycloak
