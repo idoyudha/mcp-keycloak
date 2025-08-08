@@ -8,8 +8,10 @@ client = KeycloakClient()
 
 @mcp.tool()
 def list_realm_roles(
-    first: Optional[int] = None, max: Optional[int] = None, search: Optional[str] = None,
-    realm: Optional[str] = None
+    first: Optional[int] = None,
+    max: Optional[int] = None,
+    search: Optional[str] = None,
+    realm: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     List all realm roles.
@@ -81,8 +83,10 @@ def create_realm_role(
 
 @mcp.tool()
 def update_realm_role(
-    role_name: str, description: Optional[str] = None, composite: Optional[bool] = None,
-    realm: Optional[str] = None
+    role_name: str,
+    description: Optional[str] = None,
+    composite: Optional[bool] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Update a realm role.
@@ -160,7 +164,9 @@ def list_client_roles(
     if search:
         params["search"] = search
 
-    return client._make_request("GET", f"/clients/{client_id}/roles", params=params, realm=realm)
+    return client._make_request(
+        "GET", f"/clients/{client_id}/roles", params=params, realm=realm
+    )
 
 
 @mcp.tool()
@@ -189,12 +195,16 @@ def create_client_role(
     if description:
         role_data["description"] = description
 
-    client._make_request("POST", f"/clients/{client_id}/roles", data=role_data, realm=realm)
+    client._make_request(
+        "POST", f"/clients/{client_id}/roles", data=role_data, realm=realm
+    )
     return {"status": "created", "message": f"Client role {name} created successfully"}
 
 
 @mcp.tool()
-def assign_realm_role_to_user(user_id: str, role_names: List[str], realm: Optional[str] = None) -> Dict[str, str]:
+def assign_realm_role_to_user(
+    user_id: str, role_names: List[str], realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Assign realm roles to a user.
 
@@ -212,7 +222,9 @@ def assign_realm_role_to_user(user_id: str, role_names: List[str], realm: Option
         role = client._make_request("GET", f"/roles/{role_name}", realm=realm)
         roles.append(role)
 
-    client._make_request("POST", f"/users/{user_id}/role-mappings/realm", data=roles, realm=realm)
+    client._make_request(
+        "POST", f"/users/{user_id}/role-mappings/realm", data=roles, realm=realm
+    )
     return {
         "status": "assigned",
         "message": f"Roles {role_names} assigned to user {user_id}",
@@ -220,7 +232,9 @@ def assign_realm_role_to_user(user_id: str, role_names: List[str], realm: Option
 
 
 @mcp.tool()
-def remove_realm_role_from_user(user_id: str, role_names: List[str], realm: Optional[str] = None) -> Dict[str, str]:
+def remove_realm_role_from_user(
+    user_id: str, role_names: List[str], realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Remove realm roles from a user.
 
@@ -238,7 +252,9 @@ def remove_realm_role_from_user(user_id: str, role_names: List[str], realm: Opti
         role = client._make_request("GET", f"/roles/{role_name}", realm=realm)
         roles.append(role)
 
-    client._make_request("DELETE", f"/users/{user_id}/role-mappings/realm", data=roles, realm=realm)
+    client._make_request(
+        "DELETE", f"/users/{user_id}/role-mappings/realm", data=roles, realm=realm
+    )
     return {
         "status": "removed",
         "message": f"Roles {role_names} removed from user {user_id}",
@@ -246,7 +262,9 @@ def remove_realm_role_from_user(user_id: str, role_names: List[str], realm: Opti
 
 
 @mcp.tool()
-def get_user_realm_roles(user_id: str, effective: bool = False, realm: Optional[str] = None) -> List[Dict[str, Any]]:
+def get_user_realm_roles(
+    user_id: str, effective: bool = False, realm: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Get realm roles for a user.
 
@@ -284,11 +302,16 @@ def assign_client_role_to_user(
     # Get role representations
     roles = []
     for role_name in role_names:
-        role = client._make_request("GET", f"/clients/{client_id}/roles/{role_name}", realm=realm)
+        role = client._make_request(
+            "GET", f"/clients/{client_id}/roles/{role_name}", realm=realm
+        )
         roles.append(role)
 
     client._make_request(
-        "POST", f"/users/{user_id}/role-mappings/clients/{client_id}", data=roles, realm=realm
+        "POST",
+        f"/users/{user_id}/role-mappings/clients/{client_id}",
+        data=roles,
+        realm=realm,
     )
     return {
         "status": "assigned",

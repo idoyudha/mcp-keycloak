@@ -9,7 +9,9 @@ class KeycloakClient:
         self.server_url = KEYCLOAK_CFG["server_url"]
         self.username = KEYCLOAK_CFG["username"]
         self.password = KEYCLOAK_CFG["password"]
-        self.realm_name = KEYCLOAK_CFG["realm_name"] if KEYCLOAK_CFG["realm_name"] else DEFAULT_REALM
+        self.realm_name = (
+            KEYCLOAK_CFG["realm_name"] if KEYCLOAK_CFG["realm_name"] else DEFAULT_REALM
+        )
         self.client_id = KEYCLOAK_CFG["client_id"]
         self.client_secret = KEYCLOAK_CFG["client_secret"]
         self.token = None

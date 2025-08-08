@@ -56,7 +56,9 @@ def get_client(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
 
 
 @mcp.tool()
-def get_client_by_clientid(client_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
+def get_client_by_clientid(
+    client_id: str, realm: Optional[str] = None
+) -> Dict[str, Any]:
     """
     Get a specific client by client ID.
 
@@ -67,7 +69,9 @@ def get_client_by_clientid(client_id: str, realm: Optional[str] = None) -> Dict[
     Returns:
         Client object
     """
-    clients = client._make_request("GET", "/clients", params={"clientId": client_id}, realm=realm)
+    clients = client._make_request(
+        "GET", "/clients", params={"clientId": client_id}, realm=realm
+    )
     if clients and len(clients) > 0:
         # Find exact match
         for c in clients:
@@ -268,4 +272,6 @@ def get_client_service_account(id: str, realm: Optional[str] = None) -> Dict[str
     Returns:
         Service account user object
     """
-    return client._make_request("GET", f"/clients/{id}/service-account-user", realm=realm)
+    return client._make_request(
+        "GET", f"/clients/{id}/service-account-user", realm=realm
+    )

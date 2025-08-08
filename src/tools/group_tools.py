@@ -8,8 +8,10 @@ client = KeycloakClient()
 
 @mcp.tool()
 def list_groups(
-    first: Optional[int] = None, max: Optional[int] = None, search: Optional[str] = None,
-    realm: Optional[str] = None
+    first: Optional[int] = None,
+    max: Optional[int] = None,
+    search: Optional[str] = None,
+    realm: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     List all groups in the realm.
@@ -133,8 +135,10 @@ def delete_group(group_id: str, realm: Optional[str] = None) -> Dict[str, str]:
 
 @mcp.tool()
 def get_group_members(
-    group_id: str, first: Optional[int] = None, max: Optional[int] = None,
-    realm: Optional[str] = None
+    group_id: str,
+    first: Optional[int] = None,
+    max: Optional[int] = None,
+    realm: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     Get members of a group.
@@ -154,11 +158,15 @@ def get_group_members(
     if max is not None:
         params["max"] = max
 
-    return client._make_request("GET", f"/groups/{group_id}/members", params=params, realm=realm)
+    return client._make_request(
+        "GET", f"/groups/{group_id}/members", params=params, realm=realm
+    )
 
 
 @mcp.tool()
-def add_user_to_group(user_id: str, group_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+def add_user_to_group(
+    user_id: str, group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Add a user to a group.
 
@@ -175,7 +183,9 @@ def add_user_to_group(user_id: str, group_id: str, realm: Optional[str] = None) 
 
 
 @mcp.tool()
-def remove_user_from_group(user_id: str, group_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+def remove_user_from_group(
+    user_id: str, group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Remove a user from a group.
 

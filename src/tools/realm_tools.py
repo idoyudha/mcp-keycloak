@@ -5,6 +5,7 @@ from .keycloak_client import KeycloakClient
 
 client = KeycloakClient()
 
+
 @mcp.tool()
 def get_accessible_realms() -> List[Dict[str, Any]]:
     """
@@ -14,6 +15,7 @@ def get_accessible_realms() -> List[Dict[str, Any]]:
         List of accessible realms
     """
     return client._make_request("GET", "/realms", skip_realm=True)
+
 
 @mcp.tool()
 def get_realm_info(realm: Optional[str] = None) -> Dict[str, Any]:
@@ -222,7 +224,9 @@ def get_realm_default_groups(realm: Optional[str] = None) -> List[Dict[str, Any]
 
 
 @mcp.tool()
-def add_realm_default_group(group_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+def add_realm_default_group(
+    group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Add a default group to the realm.
 
@@ -238,7 +242,9 @@ def add_realm_default_group(group_id: str, realm: Optional[str] = None) -> Dict[
 
 
 @mcp.tool()
-def remove_realm_default_group(group_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+def remove_realm_default_group(
+    group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Remove a default group from the realm.
 

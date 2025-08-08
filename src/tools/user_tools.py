@@ -210,7 +210,9 @@ def reset_user_password(
 
 
 @mcp.tool()
-def get_user_sessions(user_id: str, realm: Optional[str] = None) -> List[Dict[str, Any]]:
+def get_user_sessions(
+    user_id: str, realm: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Get active sessions for a user.
 
