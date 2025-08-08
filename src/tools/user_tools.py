@@ -14,6 +14,7 @@ def list_users(
     username: Optional[str] = None,
     email: Optional[str] = None,
     enabled: Optional[bool] = None,
+    realm: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     List users in the realm.
@@ -25,6 +26,7 @@ def list_users(
         username: Username filter
         email: Email filter
         enabled: Filter by enabled/disabled users
+        realm: Target realm (uses default if not specified)
 
     Returns:
         List of user objects
@@ -43,21 +45,22 @@ def list_users(
     if enabled is not None:
         params["enabled"] = str(enabled).lower()
 
-    return client._make_request("GET", "/users", params=params)
+    return client._make_request("GET", "/users", params=params, realm=realm)
 
 
 @mcp.tool()
-def get_user(user_id: str) -> Dict[str, Any]:
+def get_user(user_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get a specific user by ID.
 
     Args:
         user_id: The user's ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         User object
     """
-    return client._make_request("GET", f"/users/{user_id}")
+    return client._make_request("GET", f"/users/{user_id}", realm=realm)
 
 
 @mcp.tool()
@@ -70,6 +73,7 @@ def create_user(
     email_verified: bool = False,
     temporary_password: Optional[str] = None,
     attributes: Optional[Dict[str, List[str]]] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Create a new user.
@@ -83,6 +87,7 @@ def create_user(
         email_verified: Whether the email is verified
         temporary_password: Initial password (user will be required to change it)
         attributes: Additional user attributes
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Dict with status and location of created user
@@ -108,7 +113,7 @@ def create_user(
         ]
 
     # Create user returns no content, but includes Location header
-    client._make_request("POST", "/users", data=user_data)
+    client._make_request("POST", "/users", data=user_data, realm=realm)
     return {"status": "created", "message": f"User {username} created successfully"}
 
 
@@ -122,6 +127,7 @@ def update_user(
     enabled: Optional[bool] = None,
     email_verified: Optional[bool] = None,
     attributes: Optional[Dict[str, List[str]]] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Update an existing user.
@@ -135,12 +141,13 @@ def update_user(
         enabled: Whether the user is enabled
         email_verified: Whether the email is verified
         attributes: Updated user attributes
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
     # First get the current user data
-    current_user = client._make_request("GET", f"/users/{user_id}")
+    current_user = client._make_request("GET", f"/users/{user_id}", realm=realm)
 
     # Update only provided fields
     if username is not None:
@@ -158,28 +165,29 @@ def update_user(
     if attributes is not None:
         current_user["attributes"] = attributes
 
-    client._make_request("PUT", f"/users/{user_id}", data=current_user)
+    client._make_request("PUT", f"/users/{user_id}", data=current_user, realm=realm)
     return {"status": "updated", "message": f"User {user_id} updated successfully"}
 
 
 @mcp.tool()
-def delete_user(user_id: str) -> Dict[str, str]:
+def delete_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Delete a user.
 
     Args:
         user_id: The user's ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/users/{user_id}")
+    client._make_request("DELETE", f"/users/{user_id}", realm=realm)
     return {"status": "deleted", "message": f"User {user_id} deleted successfully"}
 
 
 @mcp.tool()
 def reset_user_password(
-    user_id: str, password: str, temporary: bool = True
+    user_id: str, password: str, temporary: bool = True, realm: Optional[str] = None
 ) -> Dict[str, str]:
     """
     Reset a user's password.
@@ -188,6 +196,7 @@ def reset_user_password(
         user_id: The user's ID
         password: New password
         temporary: Whether the password is temporary (user must change on next login)
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
@@ -195,37 +204,41 @@ def reset_user_password(
     credential_data = {"type": "password", "value": password, "temporary": temporary}
 
     client._make_request(
-        "PUT", f"/users/{user_id}/reset-password", data=credential_data
+        "PUT", f"/users/{user_id}/reset-password", data=credential_data, realm=realm
     )
     return {"status": "success", "message": f"Password reset for user {user_id}"}
 
 
 @mcp.tool()
-def get_user_sessions(user_id: str) -> List[Dict[str, Any]]:
+def get_user_sessions(
+    user_id: str, realm: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
     Get active sessions for a user.
 
     Args:
         user_id: The user's ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         List of active sessions
     """
-    return client._make_request("GET", f"/users/{user_id}/sessions")
+    return client._make_request("GET", f"/users/{user_id}/sessions", realm=realm)
 
 
 @mcp.tool()
-def logout_user(user_id: str) -> Dict[str, str]:
+def logout_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Logout all sessions for a user.
 
     Args:
         user_id: The user's ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("POST", f"/users/{user_id}/logout")
+    client._make_request("POST", f"/users/{user_id}/logout", realm=realm)
     return {
         "status": "success",
         "message": f"User {user_id} logged out from all sessions",
@@ -233,11 +246,14 @@ def logout_user(user_id: str) -> Dict[str, str]:
 
 
 @mcp.tool()
-def count_users() -> int:
+def count_users(realm: Optional[str] = None) -> int:
     """
     Count all users.
+
+    Args:
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Number of users
     """
-    return client._make_request("GET", "/users/count")
+    return client._make_request("GET", "/users/count", realm=realm)

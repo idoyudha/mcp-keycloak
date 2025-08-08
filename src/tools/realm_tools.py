@@ -7,14 +7,28 @@ client = KeycloakClient()
 
 
 @mcp.tool()
-def get_realm_info() -> Dict[str, Any]:
+def get_accessible_realms() -> List[Dict[str, Any]]:
+    """
+    Get accessible realms.
+
+    Returns:
+        List of accessible realms
+    """
+    return client._make_request("GET", "/realms", skip_realm=True)
+
+
+@mcp.tool()
+def get_realm_info(realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get information about the current realm.
+
+    Args:
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Realm configuration object
     """
-    response = client._make_request("GET", "", params=None)
+    response = client._make_request("GET", "", params=None, realm=realm)
     return response
 
 
@@ -44,6 +58,7 @@ def update_realm_settings(
     max_delta_time_seconds: Optional[int] = None,
     failure_factor: Optional[int] = None,
     default_locale: Optional[str] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Update realm settings.
@@ -73,12 +88,13 @@ def update_realm_settings(
         max_delta_time_seconds: Max time between failures
         failure_factor: Failure factor
         default_locale: Default locale
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
     # Get current realm data
-    current_realm = client._make_request("GET", "")
+    current_realm = client._make_request("GET", "", realm=realm)
 
     # Update only provided fields
     if display_name is not None:
@@ -130,22 +146,25 @@ def update_realm_settings(
     if default_locale is not None:
         current_realm["defaultLocale"] = default_locale
 
-    client._make_request("PUT", "", data=current_realm)
+    client._make_request("PUT", "", data=current_realm, realm=realm)
     return {
         "status": "updated",
-        "message": f"Realm {client.realm_name} settings updated successfully",
+        "message": f"Realm {realm if realm else client.realm_name} settings updated successfully",
     }
 
 
 @mcp.tool()
-def get_realm_events_config() -> Dict[str, Any]:
+def get_realm_events_config(realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get realm events configuration.
+
+    Args:
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Events configuration object
     """
-    return client._make_request("GET", "/events/config")
+    return client._make_request("GET", "/events/config", realm=realm)
 
 
 @mcp.tool()
@@ -155,6 +174,7 @@ def update_realm_events_config(
     enabled_event_types: Optional[List[str]] = None,
     admin_events_enabled: Optional[bool] = None,
     admin_events_details_enabled: Optional[bool] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Update realm events configuration.
@@ -165,12 +185,13 @@ def update_realm_events_config(
         enabled_event_types: Types of events to record
         admin_events_enabled: Enable admin events
         admin_events_details_enabled: Include details in admin events
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
     # Get current config
-    current_config = client._make_request("GET", "/events/config")
+    current_config = client._make_request("GET", "/events/config", realm=realm)
 
     # Update only provided fields
     if events_enabled is not None:
@@ -184,48 +205,57 @@ def update_realm_events_config(
     if admin_events_details_enabled is not None:
         current_config["adminEventsDetailsEnabled"] = admin_events_details_enabled
 
-    client._make_request("PUT", "/events/config", data=current_config)
+    client._make_request("PUT", "/events/config", data=current_config, realm=realm)
     return {"status": "updated", "message": "Events configuration updated successfully"}
 
 
 @mcp.tool()
-def get_realm_default_groups() -> List[Dict[str, Any]]:
+def get_realm_default_groups(realm: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Get default groups for the realm.
+
+    Args:
+        realm: Target realm (uses default if not specified)
 
     Returns:
         List of default groups
     """
-    return client._make_request("GET", "/default-groups")
+    return client._make_request("GET", "/default-groups", realm=realm)
 
 
 @mcp.tool()
-def add_realm_default_group(group_id: str) -> Dict[str, str]:
+def add_realm_default_group(
+    group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Add a default group to the realm.
 
     Args:
         group_id: Group ID to add as default
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("PUT", f"/default-groups/{group_id}")
+    client._make_request("PUT", f"/default-groups/{group_id}", realm=realm)
     return {"status": "added", "message": f"Group {group_id} added as default group"}
 
 
 @mcp.tool()
-def remove_realm_default_group(group_id: str) -> Dict[str, str]:
+def remove_realm_default_group(
+    group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Remove a default group from the realm.
 
     Args:
         group_id: Group ID to remove from defaults
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/default-groups/{group_id}")
+    client._make_request("DELETE", f"/default-groups/{group_id}", realm=realm)
     return {
         "status": "removed",
         "message": f"Group {group_id} removed from default groups",
@@ -233,17 +263,17 @@ def remove_realm_default_group(group_id: str) -> Dict[str, str]:
 
 
 @mcp.tool()
-def remove_all_user_sessions() -> Dict[str, str]:
+def remove_all_user_sessions(realm: Optional[str] = None) -> Dict[str, str]:
     """
-    Remove all sessions for a user.
+    Remove all sessions for all users in the realm.
 
     Args:
-        user_id: User ID to remove sessions for
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("POST", "/logout-all")
+    client._make_request("POST", "/logout-all", realm=realm)
     return {
         "status": "removed",
         "message": "Sessions for all users removed successfully",

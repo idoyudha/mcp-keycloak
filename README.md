@@ -103,6 +103,7 @@ Hierarchical user organization:
 
 ### Realm Administration
 System-wide configuration:
+- `get_accessible_realms` - List of accessible realms
 - `get_realm_info` / `update_realm_settings` - Realm configuration
 - `get_realm_events_config` / `update_realm_events_config` - Event management
 - `add_realm_default_group` / `remove_realm_default_group` - Default settings
@@ -177,7 +178,9 @@ cd mcp-keycloak
         "--directory",
         "/path/to/mcp-keycloak",
         "run",
-        "src/main.py"
+        "python",
+        "-m",
+        "src"
       ],
       "env": {
         "SERVER_URL": "https://your-keycloak.com",

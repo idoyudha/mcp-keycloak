@@ -8,7 +8,10 @@ client = KeycloakClient()
 
 @mcp.tool()
 def list_groups(
-    first: Optional[int] = None, max: Optional[int] = None, search: Optional[str] = None
+    first: Optional[int] = None,
+    max: Optional[int] = None,
+    search: Optional[str] = None,
+    realm: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     List all groups in the realm.
@@ -17,6 +20,7 @@ def list_groups(
         first: Pagination offset
         max: Maximum results size
         search: Search string
+        realm: Target realm (uses default if not specified)
 
     Returns:
         List of groups
@@ -29,21 +33,22 @@ def list_groups(
     if search:
         params["search"] = search
 
-    return client._make_request("GET", "/groups", params=params)
+    return client._make_request("GET", "/groups", params=params, realm=realm)
 
 
 @mcp.tool()
-def get_group(group_id: str) -> Dict[str, Any]:
+def get_group(group_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get a specific group by ID.
 
     Args:
         group_id: Group ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Group object
     """
-    return client._make_request("GET", f"/groups/{group_id}")
+    return client._make_request("GET", f"/groups/{group_id}", realm=realm)
 
 
 @mcp.tool()
@@ -51,6 +56,7 @@ def create_group(
     name: str,
     path: Optional[str] = None,
     attributes: Optional[Dict[str, List[str]]] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Create a new group.
@@ -59,6 +65,7 @@ def create_group(
         name: Group name
         path: Group path
         attributes: Group attributes
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
@@ -70,7 +77,7 @@ def create_group(
     if attributes:
         group_data["attributes"] = attributes
 
-    client._make_request("POST", "/groups", data=group_data)
+    client._make_request("POST", "/groups", data=group_data, realm=realm)
     return {"status": "created", "message": f"Group {name} created successfully"}
 
 
@@ -80,6 +87,7 @@ def update_group(
     name: Optional[str] = None,
     path: Optional[str] = None,
     attributes: Optional[Dict[str, List[str]]] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Update a group.
@@ -89,12 +97,13 @@ def update_group(
         name: New group name
         path: New group path
         attributes: New group attributes
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
     # Get current group
-    current_group = client._make_request("GET", f"/groups/{group_id}")
+    current_group = client._make_request("GET", f"/groups/{group_id}", realm=realm)
 
     # Update only provided fields
     if name is not None:
@@ -104,28 +113,32 @@ def update_group(
     if attributes is not None:
         current_group["attributes"] = attributes
 
-    client._make_request("PUT", f"/groups/{group_id}", data=current_group)
+    client._make_request("PUT", f"/groups/{group_id}", data=current_group, realm=realm)
     return {"status": "updated", "message": f"Group {group_id} updated successfully"}
 
 
 @mcp.tool()
-def delete_group(group_id: str) -> Dict[str, str]:
+def delete_group(group_id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Delete a group.
 
     Args:
         group_id: Group ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/groups/{group_id}")
+    client._make_request("DELETE", f"/groups/{group_id}", realm=realm)
     return {"status": "deleted", "message": f"Group {group_id} deleted successfully"}
 
 
 @mcp.tool()
 def get_group_members(
-    group_id: str, first: Optional[int] = None, max: Optional[int] = None
+    group_id: str,
+    first: Optional[int] = None,
+    max: Optional[int] = None,
+    realm: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     Get members of a group.
@@ -134,6 +147,7 @@ def get_group_members(
         group_id: Group ID
         first: Pagination offset
         max: Maximum results size
+        realm: Target realm (uses default if not specified)
 
     Returns:
         List of group members
@@ -144,38 +158,46 @@ def get_group_members(
     if max is not None:
         params["max"] = max
 
-    return client._make_request("GET", f"/groups/{group_id}/members", params=params)
+    return client._make_request(
+        "GET", f"/groups/{group_id}/members", params=params, realm=realm
+    )
 
 
 @mcp.tool()
-def add_user_to_group(user_id: str, group_id: str) -> Dict[str, str]:
+def add_user_to_group(
+    user_id: str, group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Add a user to a group.
 
     Args:
         user_id: User ID
         group_id: Group ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("PUT", f"/users/{user_id}/groups/{group_id}")
+    client._make_request("PUT", f"/users/{user_id}/groups/{group_id}", realm=realm)
     return {"status": "added", "message": f"User {user_id} added to group {group_id}"}
 
 
 @mcp.tool()
-def remove_user_from_group(user_id: str, group_id: str) -> Dict[str, str]:
+def remove_user_from_group(
+    user_id: str, group_id: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Remove a user from a group.
 
     Args:
         user_id: User ID
         group_id: Group ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/users/{user_id}/groups/{group_id}")
+    client._make_request("DELETE", f"/users/{user_id}/groups/{group_id}", realm=realm)
     return {
         "status": "removed",
         "message": f"User {user_id} removed from group {group_id}",
@@ -183,14 +205,15 @@ def remove_user_from_group(user_id: str, group_id: str) -> Dict[str, str]:
 
 
 @mcp.tool()
-def get_user_groups(user_id: str) -> List[Dict[str, Any]]:
+def get_user_groups(user_id: str, realm: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Get all groups for a user.
 
     Args:
         user_id: User ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         List of groups the user belongs to
     """
-    return client._make_request("GET", f"/users/{user_id}/groups")
+    return client._make_request("GET", f"/users/{user_id}/groups", realm=realm)

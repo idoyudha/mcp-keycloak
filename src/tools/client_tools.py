@@ -12,6 +12,7 @@ def list_clients(
     viewable_only: bool = False,
     first: Optional[int] = None,
     max: Optional[int] = None,
+    realm: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     List clients in the realm.
@@ -21,6 +22,7 @@ def list_clients(
         viewable_only: Only return viewable clients
         first: Pagination offset
         max: Maximum results size
+        realm: Target realm (uses default if not specified)
 
     Returns:
         List of client objects
@@ -35,35 +37,41 @@ def list_clients(
     if max is not None:
         params["max"] = max
 
-    return client._make_request("GET", "/clients", params=params)
+    return client._make_request("GET", "/clients", params=params, realm=realm)
 
 
 @mcp.tool()
-def get_client(id: str) -> Dict[str, Any]:
+def get_client(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get a specific client by database ID.
 
     Args:
         id: The client's database ID (not client_id)
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Client object
     """
-    return client._make_request("GET", f"/clients/{id}")
+    return client._make_request("GET", f"/clients/{id}", realm=realm)
 
 
 @mcp.tool()
-def get_client_by_clientid(client_id: str) -> Dict[str, Any]:
+def get_client_by_clientid(
+    client_id: str, realm: Optional[str] = None
+) -> Dict[str, Any]:
     """
     Get a specific client by client ID.
 
     Args:
         client_id: The client's client_id
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Client object
     """
-    clients = client._make_request("GET", "/clients", params={"clientId": client_id})
+    clients = client._make_request(
+        "GET", "/clients", params={"clientId": client_id}, realm=realm
+    )
     if clients and len(clients) > 0:
         # Find exact match
         for c in clients:
@@ -90,6 +98,7 @@ def create_client(
     direct_access_grants_enabled: bool = False,
     implicit_flow_enabled: bool = False,
     standard_flow_enabled: bool = True,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Create a new client.
@@ -111,6 +120,7 @@ def create_client(
         direct_access_grants_enabled: Enable direct access grants (password flow)
         implicit_flow_enabled: Enable implicit flow
         standard_flow_enabled: Enable standard flow (authorization code)
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
@@ -140,7 +150,7 @@ def create_client(
     if web_origins:
         client_data["webOrigins"] = web_origins
 
-    client._make_request("POST", "/clients", data=client_data)
+    client._make_request("POST", "/clients", data=client_data, realm=realm)
     return {"status": "created", "message": f"Client {client_id} created successfully"}
 
 
@@ -156,6 +166,7 @@ def update_client(
     public_client: Optional[bool] = None,
     service_accounts_enabled: Optional[bool] = None,
     direct_access_grants_enabled: Optional[bool] = None,
+    realm: Optional[str] = None,
 ) -> Dict[str, str]:
     """
     Update an existing client.
@@ -171,12 +182,13 @@ def update_client(
         public_client: Whether client is public
         service_accounts_enabled: Enable service accounts
         direct_access_grants_enabled: Enable direct access grants
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
     # Get current client data
-    current_client = client._make_request("GET", f"/clients/{id}")
+    current_client = client._make_request("GET", f"/clients/{id}", realm=realm)
 
     # Update only provided fields
     if client_id is not None:
@@ -198,62 +210,68 @@ def update_client(
     if direct_access_grants_enabled is not None:
         current_client["directAccessGrantsEnabled"] = direct_access_grants_enabled
 
-    client._make_request("PUT", f"/clients/{id}", data=current_client)
+    client._make_request("PUT", f"/clients/{id}", data=current_client, realm=realm)
     return {"status": "updated", "message": f"Client {id} updated successfully"}
 
 
 @mcp.tool()
-def delete_client(id: str) -> Dict[str, str]:
+def delete_client(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Delete a client.
 
     Args:
         id: The client's database ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/clients/{id}")
+    client._make_request("DELETE", f"/clients/{id}", realm=realm)
     return {"status": "deleted", "message": f"Client {id} deleted successfully"}
 
 
 @mcp.tool()
-def get_client_secret(id: str) -> Dict[str, str]:
+def get_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Get the client secret.
 
     Args:
         id: The client's database ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Client secret object
     """
-    return client._make_request("GET", f"/clients/{id}/client-secret")
+    return client._make_request("GET", f"/clients/{id}/client-secret", realm=realm)
 
 
 @mcp.tool()
-def regenerate_client_secret(id: str) -> Dict[str, str]:
+def regenerate_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Regenerate the client secret.
 
     Args:
         id: The client's database ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         New client secret object
     """
-    return client._make_request("POST", f"/clients/{id}/client-secret")
+    return client._make_request("POST", f"/clients/{id}/client-secret", realm=realm)
 
 
 @mcp.tool()
-def get_client_service_account(id: str) -> Dict[str, Any]:
+def get_client_service_account(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get service account user for a client.
 
     Args:
         id: The client's database ID
+        realm: Target realm (uses default if not specified)
 
     Returns:
         Service account user object
     """
-    return client._make_request("GET", f"/clients/{id}/service-account-user")
+    return client._make_request(
+        "GET", f"/clients/{id}/service-account-user", realm=realm
+    )

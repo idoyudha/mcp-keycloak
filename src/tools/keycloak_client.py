@@ -1,6 +1,7 @@
 import requests
 from typing import Dict, Any, Optional
 from ..common.config import KEYCLOAK_CFG
+from ..common.const import DEFAULT_REALM, DEFAULT_REQUEST_TIMEOUT
 
 
 class KeycloakClient:
@@ -8,7 +9,9 @@ class KeycloakClient:
         self.server_url = KEYCLOAK_CFG["server_url"]
         self.username = KEYCLOAK_CFG["username"]
         self.password = KEYCLOAK_CFG["password"]
-        self.realm_name = KEYCLOAK_CFG["realm_name"]
+        self.realm_name = (
+            KEYCLOAK_CFG["realm_name"] if KEYCLOAK_CFG["realm_name"] else DEFAULT_REALM
+        )
         self.client_id = KEYCLOAK_CFG["client_id"]
         self.client_secret = KEYCLOAK_CFG["client_secret"]
         self.token = None
@@ -26,7 +29,7 @@ class KeycloakClient:
             "client_id": "admin-cli",  # Using admin-cli for admin operations
         }
 
-        response = requests.post(token_url, data=data, timeout=30)
+        response = requests.post(token_url, data=data, timeout=DEFAULT_REQUEST_TIMEOUT)
         response.raise_for_status()
 
         token_data = response.json()
@@ -51,9 +54,16 @@ class KeycloakClient:
         endpoint: str,
         data: Optional[Dict] = None,
         params: Optional[Dict] = None,
+        skip_realm: bool = False,
+        realm: Optional[str] = None,
     ) -> Any:
         """Make authenticated request to Keycloak API"""
-        url = f"{self.server_url}/auth/admin/realms/{self.realm_name}{endpoint}"
+        if skip_realm:
+            url = f"{self.server_url}/auth/admin{endpoint}"
+        else:
+            # Use provided realm or fall back to configured realm
+            target_realm = realm if realm is not None else self.realm_name
+            url = f"{self.server_url}/auth/admin/realms/{target_realm}{endpoint}"
 
         try:
             response = requests.request(
