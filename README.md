@@ -118,14 +118,56 @@ python -m src.main
 
 ### Integration Examples
 
-#### Claude Desktop
+#### Prerequisites
 
-1. Clone the server:
+Before integrating the Keycloak MCP Server, ensure you have one of the following installed:
+
+- **uvx** (recommended): Install via `pip install uvx` or `pipx install uvx`
+- **uv**: Follow [installation instructions](https://docs.astral.sh/uv/getting-started/installation/)
+- **npm/npx**: For Smithery installation (comes with [Node.js](https://nodejs.org/))
+
+#### Option 1: Using Smithery CLI (Recommended)
+
+The easiest way - automatically configures everything for Claude Desktop:
+
 ```bash
-git clone https://github.com/idoyudha/mcp-keycloak.git
+npx @smithery/cli install @idoyudha/mcp-keycloak --client claude
 ```
 
-2. Configure in `claude_desktop_config.json`:
+This command will prompt you for the required configuration values and set up the server automatically.
+
+#### Option 2: Using uvx (Manual Setup)
+
+No cloning required! Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "keycloak": {
+      "command": "uvx",
+      "args": ["mcp-keycloak"],
+      "env": {
+        "SERVER_URL": "https://your-keycloak.com",
+        "USERNAME": "admin",
+        "PASSWORD": "admin-password",
+        "REALM_NAME": "your-realm"
+      }
+    }
+  }
+}
+```
+
+#### Option 3: Local Development Setup
+
+For development or customization:
+
+1. Clone the repository:
+```bash
+git clone https://github.com/idoyudha/mcp-keycloak.git
+cd mcp-keycloak
+```
+
+2. Add to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
@@ -148,26 +190,10 @@ git clone https://github.com/idoyudha/mcp-keycloak.git
 }
 ```
 
-#### Using uvx
-
-```json
-{
-  "mcpServers": {
-    "keycloak": {
-      "command": "uvx",
-      "args": [
-        "mcp-keycloak"
-      ],
-      "env": {
-        "SERVER_URL": "https://your-keycloak.com",
-        "USERNAME": "admin",
-        "PASSWORD": "admin-password",
-        "REALM_NAME": "your-realm"
-      }
-    }
-  }
-}
-```
+💡 **Quick Tips:**
+- Replace `/path/to/mcp-keycloak` with the actual path where you cloned the repository
+- Ensure your Keycloak server URL includes the protocol (`https://` or `http://`)
+- The `REALM_NAME` should match an existing realm in your Keycloak instance
 
 ## Example Use Cases
 
