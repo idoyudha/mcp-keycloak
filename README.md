@@ -178,7 +178,9 @@ cd mcp-keycloak
         "--directory",
         "/path/to/mcp-keycloak",
         "run",
-        "src/main.py"
+        "python",
+        "-m",
+        "src"
       ],
       "env": {
         "SERVER_URL": "https://your-keycloak.com",
