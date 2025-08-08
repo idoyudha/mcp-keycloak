@@ -13,7 +13,6 @@ startCommand:
       - serverUrl
       - username
       - password
-      - realmName
     properties:
       serverUrl:
         type: string
