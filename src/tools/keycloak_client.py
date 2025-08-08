@@ -53,12 +53,15 @@ class KeycloakClient:
         data: Optional[Dict] = None,
         params: Optional[Dict] = None,
         skip_realm: bool = False,
+        realm: Optional[str] = None,
     ) -> Any:
         """Make authenticated request to Keycloak API"""
         if skip_realm:
             url = f"{self.server_url}/auth/admin{endpoint}"
         else:
-            url = f"{self.server_url}/auth/admin/realms/{self.realm_name}{endpoint}"
+            # Use provided realm or fall back to configured realm
+            target_realm = realm if realm is not None else self.realm_name
+            url = f"{self.server_url}/auth/admin/realms/{target_realm}{endpoint}"
 
         try:
             response = requests.request(
