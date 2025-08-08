@@ -5,6 +5,15 @@ from .keycloak_client import KeycloakClient
 
 client = KeycloakClient()
 
+@mcp.tool()
+def get_accessible_realms() -> List[Dict[str, Any]]:
+    """
+    Get accessible realms.
+
+    Returns:
+        List of accessible realms
+    """
+    return client._make_request("GET", "/realms", skip_realm=True)
 
 @mcp.tool()
 def get_realm_info() -> Dict[str, Any]:

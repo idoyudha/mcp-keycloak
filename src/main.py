@@ -2,12 +2,12 @@ import sys
 from .common.server import mcp
 
 # Import all tool modules to register them with the MCP server
-from . import tools  # noqa: F401
-from .tools import user_tools  # noqa: F401
-from .tools import client_tools  # noqa: F401
-from .tools import realm_tools  # noqa: F401
-from .tools import role_tools  # noqa: F401
-from .tools import group_tools  # noqa: F401
+from . import tools
+from .tools import user_tools
+from .tools import client_tools
+from .tools import realm_tools
+from .tools import role_tools 
+from .tools import group_tools
 
 
 class KeycloakMCPServer:

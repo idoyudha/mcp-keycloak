@@ -103,6 +103,7 @@ Hierarchical user organization:
 
 ### Realm Administration
 System-wide configuration:
+- `get_accessible_realms` - List of accessible realms
 - `get_realm_info` / `update_realm_settings` - Realm configuration
 - `get_realm_events_config` / `update_realm_events_config` - Event management
 - `add_realm_default_group` / `remove_realm_default_group` - Default settings
