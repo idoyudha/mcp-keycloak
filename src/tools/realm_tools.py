@@ -7,18 +7,18 @@ client = KeycloakClient()
 
 
 @mcp.tool()
-def get_accessible_realms() -> List[Dict[str, Any]]:
+async def get_accessible_realms() -> List[Dict[str, Any]]:
     """
     Get accessible realms.
 
     Returns:
         List of accessible realms
     """
-    return client._make_request("GET", "/realms", skip_realm=True)
+    return await client._make_request("GET", "/realms", skip_realm=True)
 
 
 @mcp.tool()
-def get_realm_info(realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_realm_info(realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get information about the current realm.
 
@@ -28,12 +28,12 @@ def get_realm_info(realm: Optional[str] = None) -> Dict[str, Any]:
     Returns:
         Realm configuration object
     """
-    response = client._make_request("GET", "", params=None, realm=realm)
+    response = await client._make_request("GET", "", params=None, realm=realm)
     return response
 
 
 @mcp.tool()
-def update_realm_settings(
+async def update_realm_settings(
     display_name: Optional[str] = None,
     display_name_html: Optional[str] = None,
     login_theme: Optional[str] = None,
@@ -94,7 +94,7 @@ def update_realm_settings(
         Status message
     """
     # Get current realm data
-    current_realm = client._make_request("GET", "", realm=realm)
+    current_realm = await client._make_request("GET", "", realm=realm)
 
     # Update only provided fields
     if display_name is not None:
@@ -146,7 +146,7 @@ def update_realm_settings(
     if default_locale is not None:
         current_realm["defaultLocale"] = default_locale
 
-    client._make_request("PUT", "", data=current_realm, realm=realm)
+    await client._make_request("PUT", "", data=current_realm, realm=realm)
     return {
         "status": "updated",
         "message": f"Realm {realm if realm else client.realm_name} settings updated successfully",
@@ -154,7 +154,7 @@ def update_realm_settings(
 
 
 @mcp.tool()
-def get_realm_events_config(realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_realm_events_config(realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get realm events configuration.
 
@@ -164,11 +164,11 @@ def get_realm_events_config(realm: Optional[str] = None) -> Dict[str, Any]:
     Returns:
         Events configuration object
     """
-    return client._make_request("GET", "/events/config", realm=realm)
+    return await client._make_request("GET", "/events/config", realm=realm)
 
 
 @mcp.tool()
-def update_realm_events_config(
+async def update_realm_events_config(
     events_enabled: Optional[bool] = None,
     events_listeners: Optional[List[str]] = None,
     enabled_event_types: Optional[List[str]] = None,
@@ -191,7 +191,7 @@ def update_realm_events_config(
         Status message
     """
     # Get current config
-    current_config = client._make_request("GET", "/events/config", realm=realm)
+    current_config = await client._make_request("GET", "/events/config", realm=realm)
 
     # Update only provided fields
     if events_enabled is not None:
@@ -205,12 +205,12 @@ def update_realm_events_config(
     if admin_events_details_enabled is not None:
         current_config["adminEventsDetailsEnabled"] = admin_events_details_enabled
 
-    client._make_request("PUT", "/events/config", data=current_config, realm=realm)
+    await client._make_request("PUT", "/events/config", data=current_config, realm=realm)
     return {"status": "updated", "message": "Events configuration updated successfully"}
 
 
 @mcp.tool()
-def get_realm_default_groups(realm: Optional[str] = None) -> List[Dict[str, Any]]:
+async def get_realm_default_groups(realm: Optional[str] = None) -> List[Dict[str, Any]]:
     """
     Get default groups for the realm.
 
@@ -220,11 +220,11 @@ def get_realm_default_groups(realm: Optional[str] = None) -> List[Dict[str, Any]
     Returns:
         List of default groups
     """
-    return client._make_request("GET", "/default-groups", realm=realm)
+    return await client._make_request("GET", "/default-groups", realm=realm)
 
 
 @mcp.tool()
-def add_realm_default_group(
+async def add_realm_default_group(
     group_id: str, realm: Optional[str] = None
 ) -> Dict[str, str]:
     """
@@ -237,12 +237,12 @@ def add_realm_default_group(
     Returns:
         Status message
     """
-    client._make_request("PUT", f"/default-groups/{group_id}", realm=realm)
+    await client._make_request("PUT", f"/default-groups/{group_id}", realm=realm)
     return {"status": "added", "message": f"Group {group_id} added as default group"}
 
 
 @mcp.tool()
-def remove_realm_default_group(
+async def remove_realm_default_group(
     group_id: str, realm: Optional[str] = None
 ) -> Dict[str, str]:
     """
@@ -255,7 +255,7 @@ def remove_realm_default_group(
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/default-groups/{group_id}", realm=realm)
+    await client._make_request("DELETE", f"/default-groups/{group_id}", realm=realm)
     return {
         "status": "removed",
         "message": f"Group {group_id} removed from default groups",
@@ -263,7 +263,7 @@ def remove_realm_default_group(
 
 
 @mcp.tool()
-def remove_all_user_sessions(realm: Optional[str] = None) -> Dict[str, str]:
+async def remove_all_user_sessions(realm: Optional[str] = None) -> Dict[str, str]:
     """
     Remove all sessions for all users in the realm.
 
@@ -273,7 +273,7 @@ def remove_all_user_sessions(realm: Optional[str] = None) -> Dict[str, str]:
     Returns:
         Status message
     """
-    client._make_request("POST", "/logout-all", realm=realm)
+    await client._make_request("POST", "/logout-all", realm=realm)
     return {
         "status": "removed",
         "message": "Sessions for all users removed successfully",

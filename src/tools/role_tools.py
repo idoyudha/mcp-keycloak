@@ -7,7 +7,7 @@ client = KeycloakClient()
 
 
 @mcp.tool()
-def list_realm_roles(
+async def list_realm_roles(
     first: Optional[int] = None,
     max: Optional[int] = None,
     search: Optional[str] = None,
@@ -33,11 +33,11 @@ def list_realm_roles(
     if search:
         params["search"] = search
 
-    return client._make_request("GET", "/roles", params=params, realm=realm)
+    return await client._make_request("GET", "/roles", params=params, realm=realm)
 
 
 @mcp.tool()
-def get_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get a specific realm role by name.
 
@@ -48,11 +48,11 @@ def get_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, Any
     Returns:
         Role object
     """
-    return client._make_request("GET", f"/roles/{role_name}", realm=realm)
+    return await client._make_request("GET", f"/roles/{role_name}", realm=realm)
 
 
 @mcp.tool()
-def create_realm_role(
+async def create_realm_role(
     name: str,
     description: Optional[str] = None,
     composite: bool = False,
@@ -77,12 +77,12 @@ def create_realm_role(
     if description:
         role_data["description"] = description
 
-    client._make_request("POST", "/roles", data=role_data, realm=realm)
+    await client._make_request("POST", "/roles", data=role_data, realm=realm)
     return {"status": "created", "message": f"Realm role {name} created successfully"}
 
 
 @mcp.tool()
-def update_realm_role(
+async def update_realm_role(
     role_name: str,
     description: Optional[str] = None,
     composite: Optional[bool] = None,
@@ -101,7 +101,7 @@ def update_realm_role(
         Status message
     """
     # Get current role
-    current_role = client._make_request("GET", f"/roles/{role_name}", realm=realm)
+    current_role = await client._make_request("GET", f"/roles/{role_name}", realm=realm)
 
     # Update only provided fields
     if description is not None:
@@ -109,7 +109,7 @@ def update_realm_role(
     if composite is not None:
         current_role["composite"] = composite
 
-    client._make_request("PUT", f"/roles/{role_name}", data=current_role, realm=realm)
+    await client._make_request("PUT", f"/roles/{role_name}", data=current_role, realm=realm)
     return {
         "status": "updated",
         "message": f"Realm role {role_name} updated successfully",
@@ -117,7 +117,7 @@ def update_realm_role(
 
 
 @mcp.tool()
-def delete_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def delete_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Delete a realm role.
 
@@ -128,7 +128,7 @@ def delete_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, 
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/roles/{role_name}", realm=realm)
+    await client._make_request("DELETE", f"/roles/{role_name}", realm=realm)
     return {
         "status": "deleted",
         "message": f"Realm role {role_name} deleted successfully",
@@ -136,7 +136,7 @@ def delete_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, 
 
 
 @mcp.tool()
-def list_client_roles(
+async def list_client_roles(
     client_id: str,
     first: Optional[int] = None,
     max: Optional[int] = None,
@@ -164,13 +164,13 @@ def list_client_roles(
     if search:
         params["search"] = search
 
-    return client._make_request(
+    return await client._make_request(
         "GET", f"/clients/{client_id}/roles", params=params, realm=realm
     )
 
 
 @mcp.tool()
-def create_client_role(
+async def create_client_role(
     client_id: str,
     name: str,
     description: Optional[str] = None,
@@ -195,14 +195,14 @@ def create_client_role(
     if description:
         role_data["description"] = description
 
-    client._make_request(
+    await client._make_request(
         "POST", f"/clients/{client_id}/roles", data=role_data, realm=realm
     )
     return {"status": "created", "message": f"Client role {name} created successfully"}
 
 
 @mcp.tool()
-def assign_realm_role_to_user(
+async def assign_realm_role_to_user(
     user_id: str, role_names: List[str], realm: Optional[str] = None
 ) -> Dict[str, str]:
     """
@@ -219,10 +219,10 @@ def assign_realm_role_to_user(
     # Get role representations
     roles = []
     for role_name in role_names:
-        role = client._make_request("GET", f"/roles/{role_name}", realm=realm)
+        role = await client._make_request("GET", f"/roles/{role_name}", realm=realm)
         roles.append(role)
 
-    client._make_request(
+    await client._make_request(
         "POST", f"/users/{user_id}/role-mappings/realm", data=roles, realm=realm
     )
     return {
@@ -232,7 +232,7 @@ def assign_realm_role_to_user(
 
 
 @mcp.tool()
-def remove_realm_role_from_user(
+async def remove_realm_role_from_user(
     user_id: str, role_names: List[str], realm: Optional[str] = None
 ) -> Dict[str, str]:
     """
@@ -249,10 +249,10 @@ def remove_realm_role_from_user(
     # Get role representations
     roles = []
     for role_name in role_names:
-        role = client._make_request("GET", f"/roles/{role_name}", realm=realm)
+        role = await client._make_request("GET", f"/roles/{role_name}", realm=realm)
         roles.append(role)
 
-    client._make_request(
+    await client._make_request(
         "DELETE", f"/users/{user_id}/role-mappings/realm", data=roles, realm=realm
     )
     return {
@@ -262,7 +262,7 @@ def remove_realm_role_from_user(
 
 
 @mcp.tool()
-def get_user_realm_roles(
+async def get_user_realm_roles(
     user_id: str, effective: bool = False, realm: Optional[str] = None
 ) -> List[Dict[str, Any]]:
     """
@@ -280,11 +280,11 @@ def get_user_realm_roles(
     if effective:
         endpoint += "/composite"
 
-    return client._make_request("GET", endpoint, realm=realm)
+    return await client._make_request("GET", endpoint, realm=realm)
 
 
 @mcp.tool()
-def assign_client_role_to_user(
+async def assign_client_role_to_user(
     user_id: str, client_id: str, role_names: List[str], realm: Optional[str] = None
 ) -> Dict[str, str]:
     """
@@ -302,12 +302,12 @@ def assign_client_role_to_user(
     # Get role representations
     roles = []
     for role_name in role_names:
-        role = client._make_request(
+        role = await client._make_request(
             "GET", f"/clients/{client_id}/roles/{role_name}", realm=realm
         )
         roles.append(role)
 
-    client._make_request(
+    await client._make_request(
         "POST",
         f"/users/{user_id}/role-mappings/clients/{client_id}",
         data=roles,

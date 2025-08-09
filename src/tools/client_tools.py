@@ -7,7 +7,7 @@ client = KeycloakClient()
 
 
 @mcp.tool()
-def list_clients(
+async def list_clients(
     client_id: Optional[str] = None,
     viewable_only: bool = False,
     first: Optional[int] = None,
@@ -37,11 +37,11 @@ def list_clients(
     if max is not None:
         params["max"] = max
 
-    return client._make_request("GET", "/clients", params=params, realm=realm)
+    return await client._make_request("GET", "/clients", params=params, realm=realm)
 
 
 @mcp.tool()
-def get_client(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_client(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get a specific client by database ID.
 
@@ -52,11 +52,11 @@ def get_client(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     Returns:
         Client object
     """
-    return client._make_request("GET", f"/clients/{id}", realm=realm)
+    return await client._make_request("GET", f"/clients/{id}", realm=realm)
 
 
 @mcp.tool()
-def get_client_by_clientid(
+async def get_client_by_clientid(
     client_id: str, realm: Optional[str] = None
 ) -> Dict[str, Any]:
     """
@@ -69,7 +69,7 @@ def get_client_by_clientid(
     Returns:
         Client object
     """
-    clients = client._make_request(
+    clients = await client._make_request(
         "GET", "/clients", params={"clientId": client_id}, realm=realm
     )
     if clients and len(clients) > 0:
@@ -81,7 +81,7 @@ def get_client_by_clientid(
 
 
 @mcp.tool()
-def create_client(
+async def create_client(
     client_id: str,
     name: Optional[str] = None,
     description: Optional[str] = None,
@@ -150,12 +150,12 @@ def create_client(
     if web_origins:
         client_data["webOrigins"] = web_origins
 
-    client._make_request("POST", "/clients", data=client_data, realm=realm)
+    await client._make_request("POST", "/clients", data=client_data, realm=realm)
     return {"status": "created", "message": f"Client {client_id} created successfully"}
 
 
 @mcp.tool()
-def update_client(
+async def update_client(
     id: str,
     client_id: Optional[str] = None,
     name: Optional[str] = None,
@@ -188,7 +188,7 @@ def update_client(
         Status message
     """
     # Get current client data
-    current_client = client._make_request("GET", f"/clients/{id}", realm=realm)
+    current_client = await client._make_request("GET", f"/clients/{id}", realm=realm)
 
     # Update only provided fields
     if client_id is not None:
@@ -210,12 +210,12 @@ def update_client(
     if direct_access_grants_enabled is not None:
         current_client["directAccessGrantsEnabled"] = direct_access_grants_enabled
 
-    client._make_request("PUT", f"/clients/{id}", data=current_client, realm=realm)
+    await client._make_request("PUT", f"/clients/{id}", data=current_client, realm=realm)
     return {"status": "updated", "message": f"Client {id} updated successfully"}
 
 
 @mcp.tool()
-def delete_client(id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def delete_client(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Delete a client.
 
@@ -226,12 +226,12 @@ def delete_client(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/clients/{id}", realm=realm)
+    await client._make_request("DELETE", f"/clients/{id}", realm=realm)
     return {"status": "deleted", "message": f"Client {id} deleted successfully"}
 
 
 @mcp.tool()
-def get_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def get_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Get the client secret.
 
@@ -242,11 +242,11 @@ def get_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     Returns:
         Client secret object
     """
-    return client._make_request("GET", f"/clients/{id}/client-secret", realm=realm)
+    return await client._make_request("GET", f"/clients/{id}/client-secret", realm=realm)
 
 
 @mcp.tool()
-def regenerate_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def regenerate_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Regenerate the client secret.
 
@@ -257,11 +257,11 @@ def regenerate_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, 
     Returns:
         New client secret object
     """
-    return client._make_request("POST", f"/clients/{id}/client-secret", realm=realm)
+    return await client._make_request("POST", f"/clients/{id}/client-secret", realm=realm)
 
 
 @mcp.tool()
-def get_client_service_account(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_client_service_account(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get service account user for a client.
 
@@ -272,6 +272,6 @@ def get_client_service_account(id: str, realm: Optional[str] = None) -> Dict[str
     Returns:
         Service account user object
     """
-    return client._make_request(
+    return await client._make_request(
         "GET", f"/clients/{id}/service-account-user", realm=realm
     )

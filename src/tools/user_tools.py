@@ -7,7 +7,7 @@ client = KeycloakClient()
 
 
 @mcp.tool()
-def list_users(
+async def list_users(
     first: Optional[int] = None,
     max: Optional[int] = None,
     search: Optional[str] = None,
@@ -45,11 +45,11 @@ def list_users(
     if enabled is not None:
         params["enabled"] = str(enabled).lower()
 
-    return client._make_request("GET", "/users", params=params, realm=realm)
+    return await client._make_request("GET", "/users", params=params, realm=realm)
 
 
 @mcp.tool()
-def get_user(user_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_user(user_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     """
     Get a specific user by ID.
 
@@ -60,11 +60,11 @@ def get_user(user_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
     Returns:
         User object
     """
-    return client._make_request("GET", f"/users/{user_id}", realm=realm)
+    return await client._make_request("GET", f"/users/{user_id}", realm=realm)
 
 
 @mcp.tool()
-def create_user(
+async def create_user(
     username: str,
     email: Optional[str] = None,
     first_name: Optional[str] = None,
@@ -113,12 +113,12 @@ def create_user(
         ]
 
     # Create user returns no content, but includes Location header
-    client._make_request("POST", "/users", data=user_data, realm=realm)
+    await client._make_request("POST", "/users", data=user_data, realm=realm)
     return {"status": "created", "message": f"User {username} created successfully"}
 
 
 @mcp.tool()
-def update_user(
+async def update_user(
     user_id: str,
     username: Optional[str] = None,
     email: Optional[str] = None,
@@ -147,7 +147,7 @@ def update_user(
         Status message
     """
     # First get the current user data
-    current_user = client._make_request("GET", f"/users/{user_id}", realm=realm)
+    current_user = await client._make_request("GET", f"/users/{user_id}", realm=realm)
 
     # Update only provided fields
     if username is not None:
@@ -165,12 +165,12 @@ def update_user(
     if attributes is not None:
         current_user["attributes"] = attributes
 
-    client._make_request("PUT", f"/users/{user_id}", data=current_user, realm=realm)
+    await client._make_request("PUT", f"/users/{user_id}", data=current_user, realm=realm)
     return {"status": "updated", "message": f"User {user_id} updated successfully"}
 
 
 @mcp.tool()
-def delete_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def delete_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Delete a user.
 
@@ -181,12 +181,12 @@ def delete_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
     Returns:
         Status message
     """
-    client._make_request("DELETE", f"/users/{user_id}", realm=realm)
+    await client._make_request("DELETE", f"/users/{user_id}", realm=realm)
     return {"status": "deleted", "message": f"User {user_id} deleted successfully"}
 
 
 @mcp.tool()
-def reset_user_password(
+async def reset_user_password(
     user_id: str, password: str, temporary: bool = True, realm: Optional[str] = None
 ) -> Dict[str, str]:
     """
@@ -203,14 +203,14 @@ def reset_user_password(
     """
     credential_data = {"type": "password", "value": password, "temporary": temporary}
 
-    client._make_request(
+    await client._make_request(
         "PUT", f"/users/{user_id}/reset-password", data=credential_data, realm=realm
     )
     return {"status": "success", "message": f"Password reset for user {user_id}"}
 
 
 @mcp.tool()
-def get_user_sessions(
+async def get_user_sessions(
     user_id: str, realm: Optional[str] = None
 ) -> List[Dict[str, Any]]:
     """
@@ -223,11 +223,11 @@ def get_user_sessions(
     Returns:
         List of active sessions
     """
-    return client._make_request("GET", f"/users/{user_id}/sessions", realm=realm)
+    return await client._make_request("GET", f"/users/{user_id}/sessions", realm=realm)
 
 
 @mcp.tool()
-def logout_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def logout_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
     """
     Logout all sessions for a user.
 
@@ -238,7 +238,7 @@ def logout_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
     Returns:
         Status message
     """
-    client._make_request("POST", f"/users/{user_id}/logout", realm=realm)
+    await client._make_request("POST", f"/users/{user_id}/logout", realm=realm)
     return {
         "status": "success",
         "message": f"User {user_id} logged out from all sessions",
@@ -246,7 +246,7 @@ def logout_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
 
 
 @mcp.tool()
-def count_users(realm: Optional[str] = None) -> int:
+async def count_users(realm: Optional[str] = None) -> int:
     """
     Count all users.
 
@@ -256,4 +256,4 @@ def count_users(realm: Optional[str] = None) -> int:
     Returns:
         Number of users
     """
-    return client._make_request("GET", "/users/count", realm=realm)
+    return await client._make_request("GET", "/users/count", realm=realm)

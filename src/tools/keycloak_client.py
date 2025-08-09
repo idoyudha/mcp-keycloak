@@ -1,4 +1,4 @@
-import requests
+import httpx
 from typing import Dict, Any, Optional
 from ..common.config import KEYCLOAK_CFG
 from ..common.const import DEFAULT_REALM, DEFAULT_REQUEST_TIMEOUT
@@ -16,8 +16,15 @@ class KeycloakClient:
         self.client_secret = KEYCLOAK_CFG["client_secret"]
         self.token = None
         self.refresh_token = None
+        self._client = None
 
-    def _get_token(self) -> str:
+    async def _ensure_client(self):
+        """Ensure httpx async client exists"""
+        if self._client is None:
+            self._client = httpx.AsyncClient(timeout=DEFAULT_REQUEST_TIMEOUT)
+        return self._client
+
+    async def _get_token(self) -> str:
         """Get access token using username and password"""
         # Try new URL structure first, then fall back to old one
         token_url = f"{self.server_url}/auth/realms/{self.realm_name}/protocol/openid-connect/token"
@@ -29,7 +36,8 @@ class KeycloakClient:
             "client_id": "admin-cli",  # Using admin-cli for admin operations
         }
 
-        response = requests.post(token_url, data=data, timeout=DEFAULT_REQUEST_TIMEOUT)
+        client = await self._ensure_client()
+        response = await client.post(token_url, data=data)
         response.raise_for_status()
 
         token_data = response.json()
@@ -38,17 +46,17 @@ class KeycloakClient:
 
         return self.token
 
-    def _get_headers(self) -> Dict[str, str]:
+    async def _get_headers(self) -> Dict[str, str]:
         """Get headers with authorization token"""
         if not self.token:
-            self._get_token()
+            await self._get_token()
 
         return {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
         }
 
-    def _make_request(
+    async def _make_request(
         self,
         method: str,
         endpoint: str,
@@ -66,21 +74,25 @@ class KeycloakClient:
             url = f"{self.server_url}/auth/admin/realms/{target_realm}{endpoint}"
 
         try:
-            response = requests.request(
+            client = await self._ensure_client()
+            headers = await self._get_headers()
+            
+            response = await client.request(
                 method=method,
                 url=url,
-                headers=self._get_headers(),
+                headers=headers,
                 json=data,
                 params=params,
             )
 
             # If token expired, refresh and retry
             if response.status_code == 401:
-                self._get_token()
-                response = requests.request(
+                await self._get_token()
+                headers = await self._get_headers()
+                response = await client.request(
                     method=method,
                     url=url,
-                    headers=self._get_headers(),
+                    headers=headers,
                     json=data,
                     params=params,
                 )
@@ -91,5 +103,11 @@ class KeycloakClient:
                 return response.json()
             return None
 
-        except requests.exceptions.RequestException as e:
+        except httpx.RequestError as e:
             raise Exception(f"Keycloak API request failed: {str(e)}")
+
+    async def close(self):
+        """Close the httpx client"""
+        if self._client:
+            await self._client.aclose()
+            self._client = None
