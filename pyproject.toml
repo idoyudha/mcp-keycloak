@@ -1,6 +1,6 @@
 [project]
 name = "mcp-keycloak"
-version = "1.0.1"
+version = "1.0.2"
 description = "MCP server for Keycloak administration"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -8,7 +8,6 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "httpx>=0.28.1",
     "mcp[cli]>=1.12.3",
-    "requests>=2.32.0",
 ]
 
 [project.scripts]
