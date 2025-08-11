@@ -109,7 +109,9 @@ async def update_realm_role(
     if composite is not None:
         current_role["composite"] = composite
 
-    await client._make_request("PUT", f"/roles/{role_name}", data=current_role, realm=realm)
+    await client._make_request(
+        "PUT", f"/roles/{role_name}", data=current_role, realm=realm
+    )
     return {
         "status": "updated",
         "message": f"Realm role {role_name} updated successfully",
@@ -117,7 +119,9 @@ async def update_realm_role(
 
 
 @mcp.tool()
-async def delete_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def delete_realm_role(
+    role_name: str, realm: Optional[str] = None
+) -> Dict[str, str]:
     """
     Delete a realm role.
 

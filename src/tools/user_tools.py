@@ -165,7 +165,9 @@ async def update_user(
     if attributes is not None:
         current_user["attributes"] = attributes
 
-    await client._make_request("PUT", f"/users/{user_id}", data=current_user, realm=realm)
+    await client._make_request(
+        "PUT", f"/users/{user_id}", data=current_user, realm=realm
+    )
     return {"status": "updated", "message": f"User {user_id} updated successfully"}
 
 

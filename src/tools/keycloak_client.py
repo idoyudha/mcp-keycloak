@@ -76,7 +76,7 @@ class KeycloakClient:
         try:
             client = await self._ensure_client()
             headers = await self._get_headers()
-            
+
             response = await client.request(
                 method=method,
                 url=url,

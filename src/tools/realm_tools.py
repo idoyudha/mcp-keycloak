@@ -205,7 +205,9 @@ async def update_realm_events_config(
     if admin_events_details_enabled is not None:
         current_config["adminEventsDetailsEnabled"] = admin_events_details_enabled
 
-    await client._make_request("PUT", "/events/config", data=current_config, realm=realm)
+    await client._make_request(
+        "PUT", "/events/config", data=current_config, realm=realm
+    )
     return {"status": "updated", "message": "Events configuration updated successfully"}
 
 
