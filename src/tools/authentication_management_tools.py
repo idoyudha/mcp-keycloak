@@ -8,6 +8,7 @@ client = KeycloakClient()
 
 # Flow Management Tools
 
+
 @mcp.tool()
 async def list_authentication_flows(
     realm: Optional[str] = None,
@@ -39,7 +40,9 @@ async def get_authentication_flow(
     Returns:
         Authentication flow object
     """
-    return await client._make_request("GET", f"/authentication/flows/{flow_id}", realm=realm)
+    return await client._make_request(
+        "GET", f"/authentication/flows/{flow_id}", realm=realm
+    )
 
 
 @mcp.tool()
@@ -72,17 +75,14 @@ async def create_authentication_flow(
         "description": description,
         "providerId": provider_id,
         "topLevel": top_level,
-        "builtIn": built_in
+        "builtIn": built_in,
     }
-    
+
     if id is not None:
         flow_data["id"] = id
 
     await client._make_request(
-        "POST",
-        "/authentication/flows",
-        data=flow_data,
-        realm=realm
+        "POST", "/authentication/flows", data=flow_data, realm=realm
     )
     return {"status": f"Authentication flow '{alias}' created successfully"}
 
@@ -102,7 +102,9 @@ async def delete_authentication_flow(
     Returns:
         Status message
     """
-    await client._make_request("DELETE", f"/authentication/flows/{flow_id}", realm=realm)
+    await client._make_request(
+        "DELETE", f"/authentication/flows/{flow_id}", realm=realm
+    )
     return {"status": f"Authentication flow deleted successfully"}
 
 
@@ -133,10 +135,8 @@ async def update_authentication_flow(
     Returns:
         Status message
     """
-    flow_data = {
-        "alias": alias
-    }
-    
+    flow_data = {"alias": alias}
+
     if id is not None:
         flow_data["id"] = id
     if description is not None:
@@ -149,10 +149,7 @@ async def update_authentication_flow(
         flow_data["builtIn"] = built_in
 
     await client._make_request(
-        "PUT",
-        f"/authentication/flows/{flow_id}",
-        data=flow_data,
-        realm=realm
+        "PUT", f"/authentication/flows/{flow_id}", data=flow_data, realm=realm
     )
     return {"status": f"Authentication flow '{alias}' updated successfully"}
 
@@ -174,20 +171,18 @@ async def copy_authentication_flow(
     Returns:
         Status message
     """
-    copy_data = {
-        "newName": new_name
-    }
+    copy_data = {"newName": new_name}
 
     await client._make_request(
-        "POST", 
-        f"/authentication/flows/{flow_alias}/copy", 
-        data=copy_data, 
-        realm=realm
+        "POST", f"/authentication/flows/{flow_alias}/copy", data=copy_data, realm=realm
     )
-    return {"status": f"Authentication flow '{flow_alias}' copied to '{new_name}' successfully"}
+    return {
+        "status": f"Authentication flow '{flow_alias}' copied to '{new_name}' successfully"
+    }
 
 
 # Flow Executions Tools
+
 
 @mcp.tool()
 async def get_flow_executions(
@@ -205,9 +200,7 @@ async def get_flow_executions(
         List of execution objects
     """
     return await client._make_request(
-        "GET", 
-        f"/authentication/flows/{flow_alias}/executions", 
-        realm=realm
+        "GET", f"/authentication/flows/{flow_alias}/executions", realm=realm
     )
 
 
@@ -232,7 +225,7 @@ async def update_flow_executions(
         "PUT",
         f"/authentication/flows/{flow_alias}/executions",
         data=executions,
-        realm=realm
+        realm=realm,
     )
     return {"status": f"Flow executions updated successfully"}
 
@@ -254,15 +247,13 @@ async def add_execution_to_flow(
     Returns:
         Status message
     """
-    execution_data = {
-        "provider": provider
-    }
+    execution_data = {"provider": provider}
 
     await client._make_request(
         "POST",
         f"/authentication/flows/{flow_alias}/executions/execution",
         data=execution_data,
-        realm=realm
+        realm=realm,
     )
     return {"status": f"Execution '{provider}' added to flow successfully"}
 
@@ -292,11 +283,8 @@ async def add_subflow_to_flow(
     Returns:
         Status message
     """
-    subflow_data = {
-        "alias": alias,
-        "type": type
-    }
-    
+    subflow_data = {"alias": alias, "type": type}
+
     if id is not None:
         subflow_data["id"] = id
     if description:
@@ -308,12 +296,13 @@ async def add_subflow_to_flow(
         "POST",
         f"/authentication/flows/{flow_alias}/executions/flow",
         data=subflow_data,
-        realm=realm
+        realm=realm,
     )
     return {"status": f"Subflow '{alias}' added to flow successfully"}
 
 
 # Execution Management Tools
+
 
 @mcp.tool()
 async def get_execution(
@@ -331,9 +320,7 @@ async def get_execution(
         Execution object
     """
     return await client._make_request(
-        "GET",
-        f"/authentication/executions/{execution_id}",
-        realm=realm
+        "GET", f"/authentication/executions/{execution_id}", realm=realm
     )
 
 
@@ -353,9 +340,7 @@ async def delete_execution(
         Status message
     """
     await client._make_request(
-        "DELETE",
-        f"/authentication/executions/{execution_id}",
-        realm=realm
+        "DELETE", f"/authentication/executions/{execution_id}", realm=realm
     )
     return {"status": f"Execution deleted successfully"}
 
@@ -376,9 +361,7 @@ async def raise_execution_priority(
         Status message
     """
     await client._make_request(
-        "POST",
-        f"/authentication/executions/{execution_id}/raise-priority",
-        realm=realm
+        "POST", f"/authentication/executions/{execution_id}/raise-priority", realm=realm
     )
     return {"status": f"Execution priority raised successfully"}
 
@@ -399,9 +382,7 @@ async def lower_execution_priority(
         Status message
     """
     await client._make_request(
-        "POST",
-        f"/authentication/executions/{execution_id}/lower-priority",
-        realm=realm
+        "POST", f"/authentication/executions/{execution_id}/lower-priority", realm=realm
     )
     return {"status": f"Execution priority lowered successfully"}
 
@@ -436,7 +417,7 @@ async def create_execution(
         Status message
     """
     execution_data = {}
-    
+
     if id is not None:
         execution_data["id"] = id
     if authenticator is not None:
@@ -455,15 +436,13 @@ async def create_execution(
         execution_data["requirement"] = requirement
 
     await client._make_request(
-        "POST",
-        "/authentication/executions",
-        data=execution_data,
-        realm=realm
+        "POST", "/authentication/executions", data=execution_data, realm=realm
     )
     return {"status": f"Execution created successfully"}
 
 
 # Authenticator Configuration Tools
+
 
 @mcp.tool()
 async def get_authenticator_config(
@@ -481,9 +460,7 @@ async def get_authenticator_config(
         Configuration object
     """
     return await client._make_request(
-        "GET",
-        f"/authentication/config/{config_id}",
-        realm=realm
+        "GET", f"/authentication/config/{config_id}", realm=realm
     )
 
 
@@ -506,21 +483,18 @@ async def create_authenticator_config(
     Returns:
         Status message with configuration ID
     """
-    config_data = {
-        "alias": alias,
-        "config": config
-    }
-    
+    config_data = {"alias": alias, "config": config}
+
     if id is not None:
         config_data["id"] = id
 
     response = await client._make_request(
-        "POST",
-        "/authentication/config",
-        data=config_data,
-        realm=realm
+        "POST", "/authentication/config", data=config_data, realm=realm
     )
-    return {"status": "Configuration created successfully", "id": response.get("id", "")}
+    return {
+        "status": "Configuration created successfully",
+        "id": response.get("id", ""),
+    }
 
 
 @mcp.tool()
@@ -544,19 +518,13 @@ async def update_authenticator_config(
     Returns:
         Status message
     """
-    config_data = {
-        "alias": alias,
-        "config": config
-    }
-    
+    config_data = {"alias": alias, "config": config}
+
     if id is not None:
         config_data["id"] = id
 
     await client._make_request(
-        "PUT",
-        f"/authentication/config/{config_id}",
-        data=config_data,
-        realm=realm
+        "PUT", f"/authentication/config/{config_id}", data=config_data, realm=realm
     )
     return {"status": "Configuration updated successfully"}
 
@@ -577,9 +545,7 @@ async def delete_authenticator_config(
         Status message
     """
     await client._make_request(
-        "DELETE",
-        f"/authentication/config/{config_id}",
-        realm=realm
+        "DELETE", f"/authentication/config/{config_id}", realm=realm
     )
     return {"status": "Configuration deleted successfully"}
 
@@ -604,7 +570,7 @@ async def get_execution_config(
     return await client._make_request(
         "GET",
         f"/authentication/executions/{execution_id}/config/{config_id}",
-        realm=realm
+        realm=realm,
     )
 
 
@@ -628,20 +594,21 @@ async def update_execution_config(
         Status message
     """
     config_data = authenticator_config.copy()
-    
+
     if id is not None:
         config_data["id"] = id
-    
+
     await client._make_request(
         "POST",
         f"/authentication/executions/{execution_id}/config",
         data=config_data,
-        realm=realm
+        realm=realm,
     )
     return {"status": "Execution configuration updated successfully"}
 
 
 # Provider Tools
+
 
 @mcp.tool()
 async def get_authenticator_providers(
@@ -657,9 +624,7 @@ async def get_authenticator_providers(
         List of authenticator provider objects
     """
     return await client._make_request(
-        "GET",
-        "/authentication/authenticator-providers",
-        realm=realm
+        "GET", "/authentication/authenticator-providers", realm=realm
     )
 
 
@@ -677,9 +642,7 @@ async def get_client_authenticator_providers(
         List of client authenticator provider objects
     """
     return await client._make_request(
-        "GET",
-        "/authentication/client-authenticator-providers",
-        realm=realm
+        "GET", "/authentication/client-authenticator-providers", realm=realm
     )
 
 
@@ -699,13 +662,12 @@ async def get_provider_config_description(
         Provider configuration description object
     """
     return await client._make_request(
-        "GET",
-        f"/authentication/config-description/{provider_id}",
-        realm=realm
+        "GET", f"/authentication/config-description/{provider_id}", realm=realm
     )
 
 
 # Required Actions Tools
+
 
 @mcp.tool()
 async def get_required_actions(
@@ -721,9 +683,7 @@ async def get_required_actions(
         List of required action objects
     """
     return await client._make_request(
-        "GET",
-        "/authentication/required-actions",
-        realm=realm
+        "GET", "/authentication/required-actions", realm=realm
     )
 
 
@@ -743,9 +703,7 @@ async def get_required_action(
         Required action object
     """
     return await client._make_request(
-        "GET",
-        f"/authentication/required-actions/{alias}",
-        realm=realm
+        "GET", f"/authentication/required-actions/{alias}", realm=realm
     )
 
 
@@ -778,9 +736,9 @@ async def update_required_action(
         "alias": alias,
         "name": name,
         "enabled": enabled,
-        "defaultAction": default_action
+        "defaultAction": default_action,
     }
-    
+
     if priority is not None:
         action_data["priority"] = priority
     if config:
@@ -790,7 +748,7 @@ async def update_required_action(
         "PUT",
         f"/authentication/required-actions/{alias}",
         data=action_data,
-        realm=realm
+        realm=realm,
     )
     return {"status": f"Required action '{alias}' updated successfully"}
 
@@ -812,16 +770,13 @@ async def register_required_action(
     Returns:
         Status message
     """
-    action_data = {
-        "providerId": provider_id,
-        "name": name
-    }
+    action_data = {"providerId": provider_id, "name": name}
 
     await client._make_request(
         "POST",
         "/authentication/register-required-action",
         data=action_data,
-        realm=realm
+        realm=realm,
     )
     return {"status": f"Required action '{name}' registered successfully"}
 
@@ -840,9 +795,7 @@ async def get_unregistered_required_actions(
         List of unregistered required action objects
     """
     return await client._make_request(
-        "GET",
-        "/authentication/unregistered-required-actions",
-        realm=realm
+        "GET", "/authentication/unregistered-required-actions", realm=realm
     )
 
 
@@ -862,9 +815,7 @@ async def raise_required_action_priority(
         Status message
     """
     await client._make_request(
-        "POST",
-        f"/authentication/required-actions/{alias}/raise-priority",
-        realm=realm
+        "POST", f"/authentication/required-actions/{alias}/raise-priority", realm=realm
     )
     return {"status": f"Required action '{alias}' priority raised successfully"}
 
@@ -885,8 +836,6 @@ async def lower_required_action_priority(
         Status message
     """
     await client._make_request(
-        "POST",
-        f"/authentication/required-actions/{alias}/lower-priority",
-        realm=realm
+        "POST", f"/authentication/required-actions/{alias}/lower-priority", realm=realm
     )
     return {"status": f"Required action '{alias}' priority lowered successfully"}
