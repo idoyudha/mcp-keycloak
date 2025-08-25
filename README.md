@@ -24,6 +24,9 @@ Define and assign realm and client-specific roles, manage user permissions, and 
 ### 🏛️ Realm Administration
 Configure realm settings, manage default groups, handle event configurations, and control realm-wide policies.
 
+### 🔐 Authentication Management
+Comprehensive authentication flow management including creating, updating, and deleting flows, managing executions, and configuring authenticators.
+
 ### 🔄 Group Management
 Organize users into groups, manage group hierarchies, and handle group-based permissions efficiently.
 
@@ -107,6 +110,16 @@ System-wide configuration:
 - `get_realm_info` / `update_realm_settings` - Realm configuration
 - `get_realm_events_config` / `update_realm_events_config` - Event management
 - `add_realm_default_group` / `remove_realm_default_group` - Default settings
+
+### Authentication Management
+Complete authentication flow control:
+- `list_authentication_flows` / `get_authentication_flow` - Flow management
+- `create_authentication_flow` / `update_authentication_flow` - Flow CRUD operations
+- `delete_authentication_flow` / `copy_authentication_flow` - Flow modifications
+- `get_flow_executions` / `update_flow_executions` - Execution management
+- `create_execution` / `delete_execution` - Execution lifecycle
+- `get_authenticator_config` / `create_authenticator_config` - Configuration management
+- `get_required_actions` / `update_required_action` - Required actions control
 
 ## Usage
 
