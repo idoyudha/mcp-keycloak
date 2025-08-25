@@ -342,7 +342,7 @@ async def delete_execution(
     await client._make_request(
         "DELETE", f"/authentication/executions/{execution_id}", realm=realm
     )
-    return {"status": f"Execution deleted successfully"}
+    return {"status": "Execution deleted successfully"}
 
 
 @mcp.tool()
@@ -363,7 +363,7 @@ async def raise_execution_priority(
     await client._make_request(
         "POST", f"/authentication/executions/{execution_id}/raise-priority", realm=realm
     )
-    return {"status": f"Execution priority raised successfully"}
+    return {"status": "Execution priority raised successfully"}
 
 
 @mcp.tool()
@@ -384,7 +384,7 @@ async def lower_execution_priority(
     await client._make_request(
         "POST", f"/authentication/executions/{execution_id}/lower-priority", realm=realm
     )
-    return {"status": f"Execution priority lowered successfully"}
+    return {"status": "Execution priority lowered successfully"}
 
 
 @mcp.tool()
@@ -438,7 +438,7 @@ async def create_execution(
     await client._make_request(
         "POST", "/authentication/executions", data=execution_data, realm=realm
     )
-    return {"status": f"Execution created successfully"}
+    return {"status": "Execution created successfully"}
 
 
 # Authenticator Configuration Tools
