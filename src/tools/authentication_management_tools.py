@@ -105,7 +105,7 @@ async def delete_authentication_flow(
     await client._make_request(
         "DELETE", f"/authentication/flows/{flow_id}", realm=realm
     )
-    return {"status": f"Authentication flow deleted successfully"}
+    return {"status": "Authentication flow deleted successfully"}
 
 
 @mcp.tool()
@@ -227,7 +227,7 @@ async def update_flow_executions(
         data=executions,
         realm=realm,
     )
-    return {"status": f"Flow executions updated successfully"}
+    return {"status": "Flow executions updated successfully"}
 
 
 @mcp.tool()
