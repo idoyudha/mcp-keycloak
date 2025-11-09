@@ -6,6 +6,10 @@
 
 A Model Context Protocol (MCP) server that provides a natural language interface for managing Keycloak identity and access management through its REST API. This server enables AI agents to perform user management, client configuration, realm administration, and role-based access control operations seamlessly.
 
+<a href="https://glama.ai/mcp/servers/@idoyudha/mcp-keycloak">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@idoyudha/mcp-keycloak/badge" alt="mcp-keycloak MCP server" />
+</a>
+
 ## Overview
 
 The Keycloak MCP Server bridges the gap between AI applications and Keycloak's powerful identity management capabilities. Whether you're building an AI assistant that needs to manage users, configure clients, or handle complex authorization scenarios, this server provides the tools you need through simple, natural language commands.
