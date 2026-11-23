@@ -1,19 +1,19 @@
-from typing import Dict, Any, Optional, List
-from ..common.server import mcp
-from .keycloak_client import KeycloakClient
+from typing import Any
 
+from ..common.server import mcp
+from .keycloak_client import KeycloakClient, KeycloakError
 
 client = KeycloakClient()
 
 
 @mcp.tool()
 async def list_clients(
-    client_id: Optional[str] = None,
+    client_id: str | None = None,
     viewable_only: bool = False,
-    first: Optional[int] = None,
-    max: Optional[int] = None,
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    first: int | None = None,
+    max: int | None = None,
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     List clients in the realm.
 
@@ -41,7 +41,7 @@ async def list_clients(
 
 
 @mcp.tool()
-async def get_client(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_client(id: str, realm: str | None = None) -> dict[str, Any]:
     """
     Get a specific client by database ID.
 
@@ -57,8 +57,8 @@ async def get_client(id: str, realm: Optional[str] = None) -> Dict[str, Any]:
 
 @mcp.tool()
 async def get_client_by_clientid(
-    client_id: str, realm: Optional[str] = None
-) -> Dict[str, Any]:
+    client_id: str, realm: str | None = None
+) -> dict[str, Any]:
     """
     Get a specific client by client ID.
 
@@ -77,19 +77,19 @@ async def get_client_by_clientid(
         for c in clients:
             if c.get("clientId") == client_id:
                 return c
-    raise Exception(f"Client with client_id '{client_id}' not found")
+    raise KeycloakError(f"Client with client_id '{client_id}' not found")
 
 
 @mcp.tool()
 async def create_client(
     client_id: str,
-    name: Optional[str] = None,
-    description: Optional[str] = None,
+    name: str | None = None,
+    description: str | None = None,
     enabled: bool = True,
     always_display_in_console: bool = False,
-    root_url: Optional[str] = None,
-    redirect_uris: Optional[List[str]] = None,
-    web_origins: Optional[List[str]] = None,
+    root_url: str | None = None,
+    redirect_uris: list[str] | None = None,
+    web_origins: list[str] | None = None,
     protocol: str = "openid-connect",
     public_client: bool = False,
     bearer_only: bool = False,
@@ -98,8 +98,8 @@ async def create_client(
     direct_access_grants_enabled: bool = False,
     implicit_flow_enabled: bool = False,
     standard_flow_enabled: bool = True,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Create a new client.
 
@@ -157,17 +157,17 @@ async def create_client(
 @mcp.tool()
 async def update_client(
     id: str,
-    client_id: Optional[str] = None,
-    name: Optional[str] = None,
-    description: Optional[str] = None,
-    enabled: Optional[bool] = None,
-    redirect_uris: Optional[List[str]] = None,
-    web_origins: Optional[List[str]] = None,
-    public_client: Optional[bool] = None,
-    service_accounts_enabled: Optional[bool] = None,
-    direct_access_grants_enabled: Optional[bool] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    client_id: str | None = None,
+    name: str | None = None,
+    description: str | None = None,
+    enabled: bool | None = None,
+    redirect_uris: list[str] | None = None,
+    web_origins: list[str] | None = None,
+    public_client: bool | None = None,
+    service_accounts_enabled: bool | None = None,
+    direct_access_grants_enabled: bool | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update an existing client.
 
@@ -217,7 +217,7 @@ async def update_client(
 
 
 @mcp.tool()
-async def delete_client(id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def delete_client(id: str, realm: str | None = None) -> dict[str, str]:
     """
     Delete a client.
 
@@ -233,7 +233,7 @@ async def delete_client(id: str, realm: Optional[str] = None) -> Dict[str, str]:
 
 
 @mcp.tool()
-async def get_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def get_client_secret(id: str, realm: str | None = None) -> dict[str, str]:
     """
     Get the client secret.
 
@@ -250,9 +250,7 @@ async def get_client_secret(id: str, realm: Optional[str] = None) -> Dict[str, s
 
 
 @mcp.tool()
-async def regenerate_client_secret(
-    id: str, realm: Optional[str] = None
-) -> Dict[str, str]:
+async def regenerate_client_secret(id: str, realm: str | None = None) -> dict[str, str]:
     """
     Regenerate the client secret.
 
@@ -270,8 +268,8 @@ async def regenerate_client_secret(
 
 @mcp.tool()
 async def get_client_service_account(
-    id: str, realm: Optional[str] = None
-) -> Dict[str, Any]:
+    id: str, realm: str | None = None
+) -> dict[str, Any]:
     """
     Get service account user for a client.
 

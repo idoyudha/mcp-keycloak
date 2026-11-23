@@ -27,5 +27,5 @@ packages = ["src"]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.12.7",
+    "ruff==0.17.6",
 ]

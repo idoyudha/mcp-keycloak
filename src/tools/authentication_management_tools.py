@@ -1,7 +1,7 @@
-from typing import Dict, Any, Optional, List
+from typing import Any
+
 from ..common.server import mcp
 from .keycloak_client import KeycloakClient
-
 
 client = KeycloakClient()
 
@@ -11,8 +11,8 @@ client = KeycloakClient()
 
 @mcp.tool()
 async def list_authentication_flows(
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Get authentication flows in the realm.
 
@@ -28,8 +28,8 @@ async def list_authentication_flows(
 @mcp.tool()
 async def get_authentication_flow(
     flow_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, Any]:
+    realm: str | None = None,
+) -> dict[str, Any]:
     """
     Get a specific authentication flow by ID.
 
@@ -49,12 +49,12 @@ async def get_authentication_flow(
 async def create_authentication_flow(
     alias: str,
     description: str,
-    id: Optional[str] = None,
+    id: str | None = None,
     provider_id: str = "basic-flow",
     top_level: bool = True,
     built_in: bool = False,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Create a new authentication flow.
 
@@ -90,8 +90,8 @@ async def create_authentication_flow(
 @mcp.tool()
 async def delete_authentication_flow(
     flow_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Delete an authentication flow.
 
@@ -112,13 +112,13 @@ async def delete_authentication_flow(
 async def update_authentication_flow(
     flow_id: str,
     alias: str,
-    id: Optional[str] = None,
-    description: Optional[str] = None,
-    provider_id: Optional[str] = None,
-    top_level: Optional[bool] = None,
-    built_in: Optional[bool] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    id: str | None = None,
+    description: str | None = None,
+    provider_id: str | None = None,
+    top_level: bool | None = None,
+    built_in: bool | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update an authentication flow.
 
@@ -158,8 +158,8 @@ async def update_authentication_flow(
 async def copy_authentication_flow(
     flow_alias: str,
     new_name: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Copy an existing authentication flow under a new name.
 
@@ -187,8 +187,8 @@ async def copy_authentication_flow(
 @mcp.tool()
 async def get_flow_executions(
     flow_alias: str,
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Get authentication executions for a flow.
 
@@ -207,9 +207,9 @@ async def get_flow_executions(
 @mcp.tool()
 async def update_flow_executions(
     flow_alias: str,
-    executions: List[Dict[str, Any]],
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    executions: list[dict[str, Any]],
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update authentication executions of a flow.
 
@@ -234,8 +234,8 @@ async def update_flow_executions(
 async def add_execution_to_flow(
     flow_alias: str,
     provider: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Add a new authentication execution to a flow.
 
@@ -263,11 +263,11 @@ async def add_subflow_to_flow(
     flow_alias: str,
     alias: str,
     type: str = "basic-flow",
-    id: Optional[str] = None,
-    description: Optional[str] = None,
-    provider: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    id: str | None = None,
+    description: str | None = None,
+    provider: str | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Add a new flow with new execution to existing flow.
 
@@ -307,8 +307,8 @@ async def add_subflow_to_flow(
 @mcp.tool()
 async def get_execution(
     execution_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, Any]:
+    realm: str | None = None,
+) -> dict[str, Any]:
     """
     Get a single authentication execution.
 
@@ -327,8 +327,8 @@ async def get_execution(
 @mcp.tool()
 async def delete_execution(
     execution_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Delete an authentication execution.
 
@@ -348,8 +348,8 @@ async def delete_execution(
 @mcp.tool()
 async def raise_execution_priority(
     execution_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Raise an execution's priority.
 
@@ -369,8 +369,8 @@ async def raise_execution_priority(
 @mcp.tool()
 async def lower_execution_priority(
     execution_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Lower an execution's priority.
 
@@ -389,16 +389,16 @@ async def lower_execution_priority(
 
 @mcp.tool()
 async def create_execution(
-    id: Optional[str] = None,
-    authenticator: Optional[str] = None,
-    authenticator_flow: Optional[bool] = None,
-    authenticator_config: Optional[str] = None,
-    flow_id: Optional[str] = None,
-    parent_flow: Optional[str] = None,
-    priority: Optional[int] = None,
-    requirement: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    id: str | None = None,
+    authenticator: str | None = None,
+    authenticator_flow: bool | None = None,
+    authenticator_config: str | None = None,
+    flow_id: str | None = None,
+    parent_flow: str | None = None,
+    priority: int | None = None,
+    requirement: str | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Add a new authentication execution.
 
@@ -447,8 +447,8 @@ async def create_execution(
 @mcp.tool()
 async def get_authenticator_config(
     config_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, Any]:
+    realm: str | None = None,
+) -> dict[str, Any]:
     """
     Get authenticator configuration.
 
@@ -467,10 +467,10 @@ async def get_authenticator_config(
 @mcp.tool()
 async def create_authenticator_config(
     alias: str,
-    config: Dict[str, Any],
-    id: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    config: dict[str, Any],
+    id: str | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Create new authenticator configuration.
 
@@ -501,10 +501,10 @@ async def create_authenticator_config(
 async def update_authenticator_config(
     config_id: str,
     alias: str,
-    config: Dict[str, Any],
-    id: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    config: dict[str, Any],
+    id: str | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update authenticator configuration.
 
@@ -532,8 +532,8 @@ async def update_authenticator_config(
 @mcp.tool()
 async def delete_authenticator_config(
     config_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Delete authenticator configuration.
 
@@ -554,8 +554,8 @@ async def delete_authenticator_config(
 async def get_execution_config(
     execution_id: str,
     config_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, Any]:
+    realm: str | None = None,
+) -> dict[str, Any]:
     """
     Get execution's configuration.
 
@@ -577,10 +577,10 @@ async def get_execution_config(
 @mcp.tool()
 async def update_execution_config(
     execution_id: str,
-    authenticator_config: Dict[str, Any],
-    id: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    authenticator_config: dict[str, Any],
+    id: str | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update execution with new configuration.
 
@@ -612,8 +612,8 @@ async def update_execution_config(
 
 @mcp.tool()
 async def get_authenticator_providers(
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Get authenticator providers.
 
@@ -630,8 +630,8 @@ async def get_authenticator_providers(
 
 @mcp.tool()
 async def get_client_authenticator_providers(
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Get client authenticator providers.
 
@@ -649,8 +649,8 @@ async def get_client_authenticator_providers(
 @mcp.tool()
 async def get_provider_config_description(
     provider_id: str,
-    realm: Optional[str] = None,
-) -> Dict[str, Any]:
+    realm: str | None = None,
+) -> dict[str, Any]:
     """
     Get authenticator provider's configuration description.
 
@@ -671,8 +671,8 @@ async def get_provider_config_description(
 
 @mcp.tool()
 async def get_required_actions(
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Get all required actions in the realm.
 
@@ -690,8 +690,8 @@ async def get_required_actions(
 @mcp.tool()
 async def get_required_action(
     alias: str,
-    realm: Optional[str] = None,
-) -> Dict[str, Any]:
+    realm: str | None = None,
+) -> dict[str, Any]:
     """
     Get a specific required action by alias.
 
@@ -713,10 +713,10 @@ async def update_required_action(
     name: str,
     enabled: bool = True,
     default_action: bool = False,
-    priority: Optional[int] = None,
-    config: Optional[Dict[str, Any]] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    priority: int | None = None,
+    config: dict[str, Any] | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update a required action.
 
@@ -757,8 +757,8 @@ async def update_required_action(
 async def register_required_action(
     provider_id: str,
     name: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Register a new required action.
 
@@ -783,8 +783,8 @@ async def register_required_action(
 
 @mcp.tool()
 async def get_unregistered_required_actions(
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Get unregistered required actions.
 
@@ -802,8 +802,8 @@ async def get_unregistered_required_actions(
 @mcp.tool()
 async def raise_required_action_priority(
     alias: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Raise the priority of a required action.
 
@@ -823,8 +823,8 @@ async def raise_required_action_priority(
 @mcp.tool()
 async def lower_required_action_priority(
     alias: str,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Lower the priority of a required action.
 

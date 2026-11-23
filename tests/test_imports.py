@@ -11,11 +11,7 @@ def test_can_import_main():
 
 def test_can_import_tools():
     """Test that we can import all tool modules"""
-    from src.tools import user_tools
-    from src.tools import client_tools
-    from src.tools import realm_tools
-    from src.tools import role_tools
-    from src.tools import group_tools
+    from src.tools import client_tools, group_tools, realm_tools, role_tools, user_tools
 
     # Just check they imported successfully
     assert user_tools is not None

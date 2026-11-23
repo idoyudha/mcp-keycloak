@@ -1,13 +1,13 @@
-from typing import Dict, Any, Optional, List
+from typing import Any
+
 from ..common.server import mcp
 from .keycloak_client import KeycloakClient
-
 
 client = KeycloakClient()
 
 
 @mcp.tool()
-async def get_accessible_realms() -> List[Dict[str, Any]]:
+async def get_accessible_realms() -> list[dict[str, Any]]:
     """
     Get accessible realms.
 
@@ -18,7 +18,7 @@ async def get_accessible_realms() -> List[Dict[str, Any]]:
 
 
 @mcp.tool()
-async def get_realm_info(realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_realm_info(realm: str | None = None) -> dict[str, Any]:
     """
     Get information about the current realm.
 
@@ -34,32 +34,32 @@ async def get_realm_info(realm: Optional[str] = None) -> Dict[str, Any]:
 
 @mcp.tool()
 async def update_realm_settings(
-    display_name: Optional[str] = None,
-    display_name_html: Optional[str] = None,
-    login_theme: Optional[str] = None,
-    account_theme: Optional[str] = None,
-    admin_theme: Optional[str] = None,
-    email_theme: Optional[str] = None,
-    enabled: Optional[bool] = None,
-    registration_allowed: Optional[bool] = None,
-    registration_email_as_username: Optional[bool] = None,
-    reset_password_allowed: Optional[bool] = None,
-    remember_me: Optional[bool] = None,
-    verify_email: Optional[bool] = None,
-    login_with_email_allowed: Optional[bool] = None,
-    duplicate_emails_allowed: Optional[bool] = None,
-    ssl_required: Optional[str] = None,
-    brute_force_protected: Optional[bool] = None,
-    permanent_lockout: Optional[bool] = None,
-    max_failure_wait_seconds: Optional[int] = None,
-    minimum_quick_login_wait_seconds: Optional[int] = None,
-    wait_increment_seconds: Optional[int] = None,
-    quick_login_check_milli_seconds: Optional[int] = None,
-    max_delta_time_seconds: Optional[int] = None,
-    failure_factor: Optional[int] = None,
-    default_locale: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    display_name: str | None = None,
+    display_name_html: str | None = None,
+    login_theme: str | None = None,
+    account_theme: str | None = None,
+    admin_theme: str | None = None,
+    email_theme: str | None = None,
+    enabled: bool | None = None,
+    registration_allowed: bool | None = None,
+    registration_email_as_username: bool | None = None,
+    reset_password_allowed: bool | None = None,
+    remember_me: bool | None = None,
+    verify_email: bool | None = None,
+    login_with_email_allowed: bool | None = None,
+    duplicate_emails_allowed: bool | None = None,
+    ssl_required: str | None = None,
+    brute_force_protected: bool | None = None,
+    permanent_lockout: bool | None = None,
+    max_failure_wait_seconds: int | None = None,
+    minimum_quick_login_wait_seconds: int | None = None,
+    wait_increment_seconds: int | None = None,
+    quick_login_check_milli_seconds: int | None = None,
+    max_delta_time_seconds: int | None = None,
+    failure_factor: int | None = None,
+    default_locale: str | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update realm settings.
 
@@ -154,7 +154,7 @@ async def update_realm_settings(
 
 
 @mcp.tool()
-async def get_realm_events_config(realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_realm_events_config(realm: str | None = None) -> dict[str, Any]:
     """
     Get realm events configuration.
 
@@ -169,13 +169,13 @@ async def get_realm_events_config(realm: Optional[str] = None) -> Dict[str, Any]
 
 @mcp.tool()
 async def update_realm_events_config(
-    events_enabled: Optional[bool] = None,
-    events_listeners: Optional[List[str]] = None,
-    enabled_event_types: Optional[List[str]] = None,
-    admin_events_enabled: Optional[bool] = None,
-    admin_events_details_enabled: Optional[bool] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    events_enabled: bool | None = None,
+    events_listeners: list[str] | None = None,
+    enabled_event_types: list[str] | None = None,
+    admin_events_enabled: bool | None = None,
+    admin_events_details_enabled: bool | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update realm events configuration.
 
@@ -212,7 +212,7 @@ async def update_realm_events_config(
 
 
 @mcp.tool()
-async def get_realm_default_groups(realm: Optional[str] = None) -> List[Dict[str, Any]]:
+async def get_realm_default_groups(realm: str | None = None) -> list[dict[str, Any]]:
     """
     Get default groups for the realm.
 
@@ -227,8 +227,8 @@ async def get_realm_default_groups(realm: Optional[str] = None) -> List[Dict[str
 
 @mcp.tool()
 async def add_realm_default_group(
-    group_id: str, realm: Optional[str] = None
-) -> Dict[str, str]:
+    group_id: str, realm: str | None = None
+) -> dict[str, str]:
     """
     Add a default group to the realm.
 
@@ -245,8 +245,8 @@ async def add_realm_default_group(
 
 @mcp.tool()
 async def remove_realm_default_group(
-    group_id: str, realm: Optional[str] = None
-) -> Dict[str, str]:
+    group_id: str, realm: str | None = None
+) -> dict[str, str]:
     """
     Remove a default group from the realm.
 
@@ -265,7 +265,7 @@ async def remove_realm_default_group(
 
 
 @mcp.tool()
-async def remove_all_user_sessions(realm: Optional[str] = None) -> Dict[str, str]:
+async def remove_all_user_sessions(realm: str | None = None) -> dict[str, str]:
     """
     Remove all sessions for all users in the realm.
 

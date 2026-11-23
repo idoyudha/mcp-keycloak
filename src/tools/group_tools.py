@@ -1,18 +1,18 @@
-from typing import Dict, Any, Optional, List
+from typing import Any
+
 from ..common.server import mcp
 from .keycloak_client import KeycloakClient
-
 
 client = KeycloakClient()
 
 
 @mcp.tool()
 async def list_groups(
-    first: Optional[int] = None,
-    max: Optional[int] = None,
-    search: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    first: int | None = None,
+    max: int | None = None,
+    search: str | None = None,
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     List all groups in the realm.
 
@@ -37,7 +37,7 @@ async def list_groups(
 
 
 @mcp.tool()
-async def get_group(group_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_group(group_id: str, realm: str | None = None) -> dict[str, Any]:
     """
     Get a specific group by ID.
 
@@ -54,10 +54,10 @@ async def get_group(group_id: str, realm: Optional[str] = None) -> Dict[str, Any
 @mcp.tool()
 async def create_group(
     name: str,
-    path: Optional[str] = None,
-    attributes: Optional[Dict[str, List[str]]] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    path: str | None = None,
+    attributes: dict[str, list[str]] | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Create a new group.
 
@@ -84,11 +84,11 @@ async def create_group(
 @mcp.tool()
 async def update_group(
     group_id: str,
-    name: Optional[str] = None,
-    path: Optional[str] = None,
-    attributes: Optional[Dict[str, List[str]]] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    name: str | None = None,
+    path: str | None = None,
+    attributes: dict[str, list[str]] | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update a group.
 
@@ -122,7 +122,7 @@ async def update_group(
 
 
 @mcp.tool()
-async def delete_group(group_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def delete_group(group_id: str, realm: str | None = None) -> dict[str, str]:
     """
     Delete a group.
 
@@ -140,10 +140,10 @@ async def delete_group(group_id: str, realm: Optional[str] = None) -> Dict[str, 
 @mcp.tool()
 async def get_group_members(
     group_id: str,
-    first: Optional[int] = None,
-    max: Optional[int] = None,
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    first: int | None = None,
+    max: int | None = None,
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     Get members of a group.
 
@@ -169,8 +169,8 @@ async def get_group_members(
 
 @mcp.tool()
 async def add_user_to_group(
-    user_id: str, group_id: str, realm: Optional[str] = None
-) -> Dict[str, str]:
+    user_id: str, group_id: str, realm: str | None = None
+) -> dict[str, str]:
     """
     Add a user to a group.
 
@@ -190,8 +190,8 @@ async def add_user_to_group(
 
 @mcp.tool()
 async def remove_user_from_group(
-    user_id: str, group_id: str, realm: Optional[str] = None
-) -> Dict[str, str]:
+    user_id: str, group_id: str, realm: str | None = None
+) -> dict[str, str]:
     """
     Remove a user from a group.
 
@@ -214,8 +214,8 @@ async def remove_user_from_group(
 
 @mcp.tool()
 async def get_user_groups(
-    user_id: str, realm: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    user_id: str, realm: str | None = None
+) -> list[dict[str, Any]]:
     """
     Get all groups for a user.
 
