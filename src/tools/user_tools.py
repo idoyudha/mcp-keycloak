@@ -1,21 +1,21 @@
-from typing import Dict, Any, Optional, List
+from typing import Any
+
 from ..common.server import mcp
 from .keycloak_client import KeycloakClient
-
 
 client = KeycloakClient()
 
 
 @mcp.tool()
 async def list_users(
-    first: Optional[int] = None,
-    max: Optional[int] = None,
-    search: Optional[str] = None,
-    username: Optional[str] = None,
-    email: Optional[str] = None,
-    enabled: Optional[bool] = None,
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    first: int | None = None,
+    max: int | None = None,
+    search: str | None = None,
+    username: str | None = None,
+    email: str | None = None,
+    enabled: bool | None = None,
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     List users in the realm.
 
@@ -49,7 +49,7 @@ async def list_users(
 
 
 @mcp.tool()
-async def get_user(user_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_user(user_id: str, realm: str | None = None) -> dict[str, Any]:
     """
     Get a specific user by ID.
 
@@ -66,15 +66,15 @@ async def get_user(user_id: str, realm: Optional[str] = None) -> Dict[str, Any]:
 @mcp.tool()
 async def create_user(
     username: str,
-    email: Optional[str] = None,
-    first_name: Optional[str] = None,
-    last_name: Optional[str] = None,
+    email: str | None = None,
+    first_name: str | None = None,
+    last_name: str | None = None,
     enabled: bool = True,
     email_verified: bool = False,
-    temporary_password: Optional[str] = None,
-    attributes: Optional[Dict[str, List[str]]] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    temporary_password: str | None = None,
+    attributes: dict[str, list[str]] | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Create a new user.
 
@@ -120,15 +120,15 @@ async def create_user(
 @mcp.tool()
 async def update_user(
     user_id: str,
-    username: Optional[str] = None,
-    email: Optional[str] = None,
-    first_name: Optional[str] = None,
-    last_name: Optional[str] = None,
-    enabled: Optional[bool] = None,
-    email_verified: Optional[bool] = None,
-    attributes: Optional[Dict[str, List[str]]] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    username: str | None = None,
+    email: str | None = None,
+    first_name: str | None = None,
+    last_name: str | None = None,
+    enabled: bool | None = None,
+    email_verified: bool | None = None,
+    attributes: dict[str, list[str]] | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update an existing user.
 
@@ -172,7 +172,7 @@ async def update_user(
 
 
 @mcp.tool()
-async def delete_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def delete_user(user_id: str, realm: str | None = None) -> dict[str, str]:
     """
     Delete a user.
 
@@ -189,8 +189,8 @@ async def delete_user(user_id: str, realm: Optional[str] = None) -> Dict[str, st
 
 @mcp.tool()
 async def reset_user_password(
-    user_id: str, password: str, temporary: bool = True, realm: Optional[str] = None
-) -> Dict[str, str]:
+    user_id: str, password: str, temporary: bool = True, realm: str | None = None
+) -> dict[str, str]:
     """
     Reset a user's password.
 
@@ -213,8 +213,8 @@ async def reset_user_password(
 
 @mcp.tool()
 async def get_user_sessions(
-    user_id: str, realm: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    user_id: str, realm: str | None = None
+) -> list[dict[str, Any]]:
     """
     Get active sessions for a user.
 
@@ -229,7 +229,7 @@ async def get_user_sessions(
 
 
 @mcp.tool()
-async def logout_user(user_id: str, realm: Optional[str] = None) -> Dict[str, str]:
+async def logout_user(user_id: str, realm: str | None = None) -> dict[str, str]:
     """
     Logout all sessions for a user.
 
@@ -248,7 +248,7 @@ async def logout_user(user_id: str, realm: Optional[str] = None) -> Dict[str, st
 
 
 @mcp.tool()
-async def count_users(realm: Optional[str] = None) -> int:
+async def count_users(realm: str | None = None) -> int:
     """
     Count all users.
 

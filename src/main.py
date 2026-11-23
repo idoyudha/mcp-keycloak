@@ -5,22 +5,25 @@ A Python MCP server for managing Keycloak identity and access management.
 Supports both stdio and HTTP transports.
 """
 
+import logging
 import os
 import sys
-import logging
+
 import uvicorn
-from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response
-from .common.server import mcp
 
 # Import all tool modules to register them with the MCP server
 from . import tools  # noqa: F401
-from .tools import user_tools  # noqa: F401
-from .tools import client_tools  # noqa: F401
-from .tools import realm_tools  # noqa: F401
-from .tools import role_tools  # noqa: F401
-from .tools import group_tools  # noqa: F401
+from .common.server import mcp
+from .tools import (
+    client_tools,  # noqa: F401
+    group_tools,  # noqa: F401
+    realm_tools,  # noqa: F401
+    role_tools,  # noqa: F401
+    user_tools,  # noqa: F401
+)
 
 # Configure logging
 logging.basicConfig(
@@ -76,7 +79,7 @@ def main():
         app = mcp.streamable_http_app()
 
         # Get configuration from environment
-        port = int(os.environ.get("PORT", 8000))
+        port = int(os.environ.get("PORT", "8000"))
 
         # Add security middleware (ORDER MATTERS)
         # 1. Origin validation middleware (REQUIRED by MCP spec)

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """Test script to verify Keycloak connection and tools"""
 
-import pytest
-import sys
 import os
+import sys
+
+import pytest
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
@@ -32,7 +33,7 @@ def test_keycloak_authentication(keycloak_client):
         assert token is not None
         assert isinstance(token, str)
         assert len(token) > 20
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         # If Keycloak is not available, skip this test
         pytest.skip(f"Keycloak service not available: {e}")
 
@@ -45,7 +46,7 @@ def test_keycloak_realm_info(keycloak_client):
         assert isinstance(realm_info, dict)
         # Check for expected fields
         assert "realm" in realm_info or "id" in realm_info
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         # If Keycloak is not available, skip this test
         pytest.skip(f"Keycloak service not available: {e}")
 
@@ -67,7 +68,7 @@ def test_full_keycloak_workflow(keycloak_client):
             f"✅ Successfully connected to realm: {realm_info.get('realm', 'Unknown')}"
         )
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         pytest.skip(f"Keycloak service not available: {e}")
 
 

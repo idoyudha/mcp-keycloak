@@ -171,18 +171,21 @@ import pytest
 from unittest.mock import AsyncMock, patch
 from src.tools.user_management_tools import create_user
 
+
 @pytest.mark.asyncio
 async def test_create_user_success():
-    with patch('src.tools.keycloak_client.KeycloakClient._make_request') as mock_request:
+    with patch(
+        "src.tools.keycloak_client.KeycloakClient._make_request"
+    ) as mock_request:
         mock_request.return_value = {"id": "test-user-id"}
-        
+
         result = await create_user(
             username="testuser",
             email="test@example.com",
             first_name="Test",
-            last_name="User"
+            last_name="User",
         )
-        
+
         assert result["status"] == "User created successfully"
         mock_request.assert_called_once()
 ```
@@ -372,9 +375,7 @@ async def get_user_sessions(
     """
     try:
         return await client._make_request(
-            "GET", 
-            f"/users/{user_id}/sessions", 
-            realm=realm
+            "GET", f"/users/{user_id}/sessions", realm=realm
         )
     except Exception as e:
         raise KeycloakError(f"Failed to get user sessions: {str(e)}")

@@ -1,4 +1,4 @@
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
-# Initialize FastMCP server
-mcp = FastMCP("Keycloak MCP Server", dependencies=["dotenv"])
+# Initialize MCP server
+mcp = MCPServer("Keycloak MCP Server", dependencies=["dotenv"])

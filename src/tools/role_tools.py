@@ -1,18 +1,18 @@
-from typing import Dict, Any, Optional, List
+from typing import Any
+
 from ..common.server import mcp
 from .keycloak_client import KeycloakClient
-
 
 client = KeycloakClient()
 
 
 @mcp.tool()
 async def list_realm_roles(
-    first: Optional[int] = None,
-    max: Optional[int] = None,
-    search: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    first: int | None = None,
+    max: int | None = None,
+    search: str | None = None,
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     List all realm roles.
 
@@ -37,7 +37,7 @@ async def list_realm_roles(
 
 
 @mcp.tool()
-async def get_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[str, Any]:
+async def get_realm_role(role_name: str, realm: str | None = None) -> dict[str, Any]:
     """
     Get a specific realm role by name.
 
@@ -54,11 +54,11 @@ async def get_realm_role(role_name: str, realm: Optional[str] = None) -> Dict[st
 @mcp.tool()
 async def create_realm_role(
     name: str,
-    description: Optional[str] = None,
+    description: str | None = None,
     composite: bool = False,
     client_role: bool = False,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Create a new realm role.
 
@@ -84,10 +84,10 @@ async def create_realm_role(
 @mcp.tool()
 async def update_realm_role(
     role_name: str,
-    description: Optional[str] = None,
-    composite: Optional[bool] = None,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    description: str | None = None,
+    composite: bool | None = None,
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Update a realm role.
 
@@ -119,9 +119,7 @@ async def update_realm_role(
 
 
 @mcp.tool()
-async def delete_realm_role(
-    role_name: str, realm: Optional[str] = None
-) -> Dict[str, str]:
+async def delete_realm_role(role_name: str, realm: str | None = None) -> dict[str, str]:
     """
     Delete a realm role.
 
@@ -142,11 +140,11 @@ async def delete_realm_role(
 @mcp.tool()
 async def list_client_roles(
     client_id: str,
-    first: Optional[int] = None,
-    max: Optional[int] = None,
-    search: Optional[str] = None,
-    realm: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    first: int | None = None,
+    max: int | None = None,
+    search: str | None = None,
+    realm: str | None = None,
+) -> list[dict[str, Any]]:
     """
     List roles for a specific client.
 
@@ -177,10 +175,10 @@ async def list_client_roles(
 async def create_client_role(
     client_id: str,
     name: str,
-    description: Optional[str] = None,
+    description: str | None = None,
     composite: bool = False,
-    realm: Optional[str] = None,
-) -> Dict[str, str]:
+    realm: str | None = None,
+) -> dict[str, str]:
     """
     Create a new client role.
 
@@ -207,8 +205,8 @@ async def create_client_role(
 
 @mcp.tool()
 async def assign_realm_role_to_user(
-    user_id: str, role_names: List[str], realm: Optional[str] = None
-) -> Dict[str, str]:
+    user_id: str, role_names: list[str], realm: str | None = None
+) -> dict[str, str]:
     """
     Assign realm roles to a user.
 
@@ -237,8 +235,8 @@ async def assign_realm_role_to_user(
 
 @mcp.tool()
 async def remove_realm_role_from_user(
-    user_id: str, role_names: List[str], realm: Optional[str] = None
-) -> Dict[str, str]:
+    user_id: str, role_names: list[str], realm: str | None = None
+) -> dict[str, str]:
     """
     Remove realm roles from a user.
 
@@ -267,8 +265,8 @@ async def remove_realm_role_from_user(
 
 @mcp.tool()
 async def get_user_realm_roles(
-    user_id: str, effective: bool = False, realm: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    user_id: str, effective: bool = False, realm: str | None = None
+) -> list[dict[str, Any]]:
     """
     Get realm roles for a user.
 
@@ -289,8 +287,8 @@ async def get_user_realm_roles(
 
 @mcp.tool()
 async def assign_client_role_to_user(
-    user_id: str, client_id: str, role_names: List[str], realm: Optional[str] = None
-) -> Dict[str, str]:
+    user_id: str, client_id: str, role_names: list[str], realm: str | None = None
+) -> dict[str, str]:
     """
     Assign client roles to a user.
 

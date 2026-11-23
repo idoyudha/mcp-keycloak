@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "python-dotenv>=1.0.0",
     "httpx>=0.28.1",
-    "mcp[cli]>=1.12.3",
+    "mcp[cli]>=2.3.0,<3",
     "uvicorn>=0.24.0",
     "starlette>=0.27.0",
 ]
@@ -27,5 +27,5 @@ packages = ["src"]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.12.7",
+    "ruff==0.17.6",
 ]

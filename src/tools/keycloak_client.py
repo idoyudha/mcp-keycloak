@@ -1,7 +1,13 @@
+from typing import Any
+
 import httpx
-from typing import Dict, Any, Optional
+
 from ..common.config import KEYCLOAK_CFG
 from ..common.const import DEFAULT_REALM, DEFAULT_REQUEST_TIMEOUT
+
+
+class KeycloakError(Exception):
+    """Raised when a Keycloak API call fails."""
 
 
 class KeycloakClient:
@@ -46,7 +52,7 @@ class KeycloakClient:
 
         return self.token
 
-    async def _get_headers(self) -> Dict[str, str]:
+    async def _get_headers(self) -> dict[str, str]:
         """Get headers with authorization token"""
         if not self.token:
             await self._get_token()
@@ -60,10 +66,10 @@ class KeycloakClient:
         self,
         method: str,
         endpoint: str,
-        data: Optional[Dict] = None,
-        params: Optional[Dict] = None,
+        data: dict | None = None,
+        params: dict | None = None,
         skip_realm: bool = False,
-        realm: Optional[str] = None,
+        realm: str | None = None,
     ) -> Any:
         """Make authenticated request to Keycloak API"""
         if skip_realm:
@@ -104,7 +110,7 @@ class KeycloakClient:
             return None
 
         except httpx.RequestError as e:
-            raise Exception(f"Keycloak API request failed: {str(e)}")
+            raise KeycloakError(f"Keycloak API request failed: {e!s}") from e
 
     async def close(self):
         """Close the httpx client"""
