@@ -158,7 +158,7 @@ The Keycloak MCP Server supports HTTP transport mode, which offers several advan
 
 #### HTTP Protocol Details
 
-The HTTP transport follows the MCP specification for Streamable HTTP. FastMCP automatically handles all protocol requirements:
+The HTTP transport follows the MCP specification for Streamable HTTP. The MCP Python SDK (`MCPServer`) automatically handles all protocol requirements:
 
 - **Endpoint**: All communication happens through `/mcp/` endpoint
 - **Request Method**: POST requests with JSON-RPC 2.0 messages
@@ -168,7 +168,7 @@ The HTTP transport follows the MCP specification for Streamable HTTP. FastMCP au
 - **Accept Headers**: Clients must include `Accept: application/json, text/event-stream`
 - **Message Format**: All messages use JSON-RPC 2.0 format, UTF-8 encoded
 
-FastMCP automatically determines whether to return a single JSON response or an SSE stream based on the request type and whether the response needs streaming capabilities.
+`MCPServer` automatically determines whether to return a single JSON response or an SSE stream based on the request type and whether the response needs streaming capabilities.
 
 #### Connecting to HTTP Server
 
